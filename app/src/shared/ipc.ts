@@ -15,7 +15,7 @@ import type {
 
 export type OkResult = { ok: boolean; reason?: string }
 
-export interface CardinalApi {
+export interface AtlasApi {
   auth: {
     login(username: string, pin: string): Promise<OkResult & { user?: AuthUser }>
     logout(): Promise<void>

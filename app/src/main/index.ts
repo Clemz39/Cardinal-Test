@@ -1,8 +1,11 @@
 import { app, BrowserWindow, shell } from 'electron'
+import { join } from 'path'
 import { getDb } from './db'
 import { scaleSimulator } from './scaleSimulator'
 import { registerIpcHandlers } from './ipc'
 import { loadAppRoute, PRELOAD_PATH } from './windowUrl'
+
+const ICON_PATH = join(__dirname, '../../build/icon.png')
 
 function createMainWindow(): BrowserWindow {
   const win = new BrowserWindow({
@@ -12,6 +15,7 @@ function createMainWindow(): BrowserWindow {
     minHeight: 800,
     show: false,
     backgroundColor: '#e6e4dd',
+    icon: ICON_PATH,
     webPreferences: {
       preload: PRELOAD_PATH,
       contextIsolation: true,
@@ -30,6 +34,7 @@ function createMainWindow(): BrowserWindow {
 }
 
 app.whenReady().then(() => {
+  app.setName('Atlas Weigh Navigator')
   getDb()
   scaleSimulator.start()
   registerIpcHandlers()

@@ -139,7 +139,7 @@ export function getDb(): Database.Database {
 
   const userDataPath = app.getPath('userData')
   if (!existsSync(userDataPath)) mkdirSync(userDataPath, { recursive: true })
-  const dbPath = join(userDataPath, 'cardinal225.sqlite3')
+  const dbPath = join(userDataPath, 'atlasweigh.sqlite3')
 
   db = new Database(dbPath)
   db.pragma('journal_mode = WAL')

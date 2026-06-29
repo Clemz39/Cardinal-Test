@@ -50,7 +50,7 @@ export function SettingsScreen() {
           <div className={styles.connectionHeader}>
             <div>
               <div className={styles.connectionName}>Weigh Indicator</div>
-              <div className={styles.connectionFw}>Cardinal 225 Navigator · FW 2.14</div>
+              <div className={styles.connectionFw}>Atlas Weigh Navigator · FW 2.14</div>
             </div>
             <div className={styles.statusPill}>
               <Dot color="var(--color-green)" size={8} glow pulse />

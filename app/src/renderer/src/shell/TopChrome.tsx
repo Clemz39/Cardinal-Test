@@ -56,7 +56,7 @@ export function TopChrome({ screen, onNavigate, currentUser, onLogout }: TopChro
         <div className={styles.logo}>
           <div className={styles.logoDot} />
         </div>
-        <div className={styles.wordmark}>CARDINAL 225 NAVIGATOR</div>
+        <div className={styles.wordmark}>ATLAS WEIGH NAVIGATOR</div>
         {settings && <div className={styles.scaleLabel}>{settings.scaleLabel}</div>}
       </div>
 

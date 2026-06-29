@@ -1,7 +1,8 @@
 {
-  "name": "cardinal-225-navigator",
+  "name": "atlas-weigh-navigator",
+  "productName": "Atlas Weigh Navigator",
   "version": "0.1.0",
-  "description": "Desktop weighbridge interface for a Cardinal 225 Navigator weigh indicator",
+  "description": "Desktop weighbridge interface for an Atlas Weigh Navigator weigh indicator",
   "main": "./out/main/index.js",
   "author": "",
   "private": true,

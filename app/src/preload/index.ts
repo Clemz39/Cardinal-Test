@@ -1,8 +1,8 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
-import type { CardinalApi } from '../shared/ipc'
+import type { AtlasApi } from '../shared/ipc'
 import type { DataEntity, ScaleReading } from '../shared/types'
 
-const api: CardinalApi = {
+const api: AtlasApi = {
   auth: {
     login: (username, pin) => ipcRenderer.invoke('auth:login', username, pin),
     logout: () => ipcRenderer.invoke('auth:logout'),

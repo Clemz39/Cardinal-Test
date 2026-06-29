@@ -36,7 +36,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           <div className={styles.logo}>
             <div className={styles.logoDot} />
           </div>
-          <div className={styles.wordmark}>CARDINAL 225 NAVIGATOR</div>
+          <div className={styles.wordmark}>ATLAS WEIGH NAVIGATOR</div>
           <div className={styles.subtitle}>WEIGHBRIDGE TERMINAL</div>
         </div>
         <form className={styles.body} onSubmit={handleSubmit}>
