@@ -1,0 +1,87 @@
+import { ipcMain, BrowserWindow } from 'electron'
+import { scaleSimulator } from '../scaleSimulator'
+import { dataBus } from '../events'
+import {
+  getDraft,
+  newDraft,
+  setDraftVehicle,
+  setDraftField,
+  pressZero,
+  pressTareButton,
+  captureGross,
+  saveDraft,
+  type DraftField
+} from '../ticketService'
+import { listTickets, getTicket, getRecentDoneTickets, distinctCommodities, distinctHaulers } from '../repos/ticketRepo'
+import {
+  listVehicles,
+  getVehicle,
+  createVehicle,
+  updateVehicle,
+  deleteVehicle,
+  getVehicleHistory
+} from '../repos/vehicleRepo'
+import { startReweigh, cancelReweigh, confirmReweigh, setManualTare } from '../vehicleService'
+import { listProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../repos/productRepo'
+import { getSettings, updateSettings } from '../repos/settingsRepo'
+import { getReportSummary } from '../reportService'
+import { exportTicketsCsv, exportReportPdf, printTicket } from '../printing'
+import type { DataEntity, Product, ReportRange, ScaleReading, Settings, TicketFilter, Vehicle } from '../../shared/types'
+
+function broadcast(channel: string, payload: unknown): void {
+  for (const win of BrowserWindow.getAllWindows()) {
+    win.webContents.send(channel, payload)
+  }
+}
+
+export function registerIpcHandlers(): void {
+  ipcMain.handle('draft:get', () => getDraft())
+  ipcMain.handle('draft:reset', () => newDraft())
+  ipcMain.handle('draft:setVehicle', (_e, vehicleId: string | null) => setDraftVehicle(vehicleId))
+  ipcMain.handle('draft:setField', (_e, field: DraftField, value: string) => setDraftField(field, value))
+  ipcMain.handle('draft:pressZero', () => pressZero())
+  ipcMain.handle('draft:pressTare', () => pressTareButton())
+  ipcMain.handle('draft:captureGross', () => captureGross())
+  ipcMain.handle('draft:save', () => saveDraft())
+
+  ipcMain.handle('tickets:list', (_e, filter?: TicketFilter) => listTickets(filter))
+  ipcMain.handle('tickets:get', (_e, id: string) => getTicket(id))
+  ipcMain.handle('tickets:recentDone', (_e, limit?: number) => getRecentDoneTickets(limit))
+  ipcMain.handle('tickets:distinctCommodities', () => distinctCommodities())
+  ipcMain.handle('tickets:distinctHaulers', () => distinctHaulers())
+  ipcMain.handle('tickets:exportCsv', (_e, filter?: TicketFilter) => exportTicketsCsv(filter))
+  ipcMain.handle('tickets:print', (_e, id: string, copies?: number) => printTicket(id, copies))
+
+  ipcMain.handle('vehicles:list', (_e, query?: string) => listVehicles(query))
+  ipcMain.handle('vehicles:get', (_e, id: string) => getVehicle(id))
+  ipcMain.handle(
+    'vehicles:create',
+    (_e, input: Omit<Vehicle, 'storedTare' | 'tareCapturedAt'> & Partial<Pick<Vehicle, 'storedTare' | 'tareCapturedAt'>>) =>
+      createVehicle(input)
+  )
+  ipcMain.handle('vehicles:update', (_e, id: string, patch: Partial<Omit<Vehicle, 'id'>>) => updateVehicle(id, patch))
+  ipcMain.handle('vehicles:delete', (_e, id: string) => deleteVehicle(id))
+  ipcMain.handle('vehicles:history', (_e, id: string, limit?: number) => getVehicleHistory(id, limit))
+  ipcMain.handle('vehicles:startReweigh', (_e, id: string) => startReweigh(id))
+  ipcMain.handle('vehicles:cancelReweigh', () => cancelReweigh())
+  ipcMain.handle('vehicles:confirmReweigh', (_e, id: string) => confirmReweigh(id))
+  ipcMain.handle('vehicles:setManualTare', (_e, id: string, kg: number) => setManualTare(id, kg))
+
+  ipcMain.handle('products:list', () => listProducts())
+  ipcMain.handle('products:get', (_e, id: string) => getProduct(id))
+  ipcMain.handle('products:create', (_e, input: Product) => createProduct(input))
+  ipcMain.handle('products:update', (_e, id: string, patch: Partial<Omit<Product, 'id'>>) => updateProduct(id, patch))
+  ipcMain.handle('products:delete', (_e, id: string) => deleteProduct(id))
+
+  ipcMain.handle('settings:get', () => getSettings())
+  ipcMain.handle('settings:update', (_e, patch: Partial<Settings>) => updateSettings(patch))
+
+  ipcMain.handle('reports:summary', (_e, range: ReportRange) => getReportSummary(range))
+  ipcMain.handle('reports:exportPdf', (_e, range: ReportRange) => exportReportPdf(range))
+
+  ipcMain.handle('scale:getReading', () => scaleSimulator.getReading())
+  ipcMain.handle('scale:recentLines', (_e, limit?: number) => scaleSimulator.getRecentLines(limit))
+
+  scaleSimulator.on('reading', (reading: ScaleReading) => broadcast('scale:reading', reading))
+  dataBus.on('changed', (entities: DataEntity[]) => broadcast('data:changed', entities))
+}

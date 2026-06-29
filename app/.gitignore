@@ -1,0 +1,9 @@
+node_modules/
+out/
+dist/
+release/
+*.log
+.DS_Store
+*.sqlite3
+*.sqlite3-journal
+*.tsbuildinfo

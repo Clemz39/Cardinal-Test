@@ -1,0 +1,80 @@
+.layout {
+  padding: 30px 34px;
+  font-family: var(--font-mono);
+  background: var(--color-card-white);
+}
+
+.header {
+  text-align: center;
+  border-bottom: 2px solid var(--color-text);
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
+
+.facility {
+  font: 700 18px var(--font-sans);
+  color: var(--color-text);
+  letter-spacing: 0.04em;
+}
+
+.address {
+  font: 500 11px var(--font-mono);
+  color: var(--color-text-muted);
+  margin-top: 3px;
+}
+
+.ticketNo {
+  font: 700 13px var(--font-mono);
+  color: var(--color-text);
+  margin-top: 8px;
+}
+
+.fields {
+  font: 500 12px/2.1 var(--font-mono);
+  color: var(--color-text);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.key {
+  color: var(--color-text-faint);
+}
+
+.divider {
+  border-top: 1.5px dashed var(--color-border);
+  margin: 12px 0;
+}
+
+.weightRow {
+  font-size: 13px;
+}
+
+.netRow {
+  font-weight: 700;
+  font-size: 18px;
+  margin-top: 6px;
+  border-top: 2px solid var(--color-text);
+  padding-top: 8px;
+}
+
+.tonnesRow {
+  color: var(--color-text-muted);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 18px;
+  font: 500 10px var(--font-mono);
+  color: var(--color-text-faint);
+}
+
+.barcode {
+  text-align: center;
+  margin-top: 10px;
+  font: 700 14px var(--font-mono);
+  color: var(--color-text);
+  letter-spacing: 4px;
+}

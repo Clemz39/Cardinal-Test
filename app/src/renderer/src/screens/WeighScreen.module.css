@@ -1,0 +1,359 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+/* LED banner */
+
+.banner {
+  background: var(--color-chrome-darker);
+  display: flex;
+  align-items: stretch;
+  height: 130px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--color-chrome-border);
+}
+
+.bannerLeft {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 34px;
+  padding: 0 30px;
+}
+
+.netLabel {
+  font: 600 10px var(--font-mono);
+  color: var(--color-amber-dim);
+  letter-spacing: 0.18em;
+  margin-bottom: 3px;
+}
+
+.netValue {
+  font: 700 68px/1 var(--font-mono);
+  color: var(--color-amber);
+  letter-spacing: 1px;
+  text-shadow: 0 0 18px rgba(255, 176, 0, 0.5);
+}
+
+.bannerSub {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 32px;
+  border-left: 1px solid var(--color-chrome-surface);
+}
+
+.bannerSubRow {
+  display: flex;
+  gap: 20px;
+  align-items: baseline;
+}
+
+.bannerSubLabel {
+  font: 600 10px var(--font-mono);
+  color: var(--color-text-on-dark-dim);
+  letter-spacing: 0.12em;
+  width: 48px;
+}
+
+.bannerSubValueGross {
+  font: 600 24px var(--font-mono);
+  color: var(--color-amber);
+}
+
+.bannerSubValueTare {
+  font: 600 24px var(--font-mono);
+  color: var(--color-tare-green);
+}
+
+.bannerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 28px;
+  border-left: 1px solid var(--color-chrome-surface);
+}
+
+.statusCol {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.buttonCol {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 9px;
+}
+
+.actionError {
+  margin: 14px 26px 0;
+  padding: 10px 16px;
+  background: var(--color-amber-bg);
+  border: 1px solid var(--color-amber-border);
+  border-radius: var(--radius);
+  color: var(--color-amber-text);
+  font: 600 12px var(--font-sans);
+}
+
+/* body */
+
+.body {
+  display: flex;
+  flex: 1;
+}
+
+.formCol {
+  flex: 1;
+  padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ticketHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ticketHeaderLeft {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.ticketLabel {
+  font: 600 11px var(--font-mono);
+  color: var(--color-text-faint);
+  letter-spacing: 0.1em;
+}
+
+.ticketId {
+  font: 700 26px var(--font-mono);
+  color: var(--color-text);
+}
+
+.ticketDate {
+  font: 500 12px var(--font-mono);
+  color: var(--color-text-faint);
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.actionRow {
+  margin-top: auto;
+  display: flex;
+  gap: 11px;
+}
+
+/* vehicle picker */
+
+.vehicleBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-card);
+  border: 1.5px solid var(--color-accent-strong);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  cursor: pointer;
+}
+
+.vehicleSelected {
+  font: 600 19px var(--font-sans);
+  color: var(--color-text);
+}
+
+.vehicleValidity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 12px var(--font-mono);
+}
+
+.vehicleEditWrap {
+  position: relative;
+}
+
+.vehicleInput {
+  width: 100%;
+  background: var(--color-card);
+  border: 1.5px solid var(--color-accent-strong);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  font: 600 19px var(--font-sans);
+  color: var(--color-text);
+  outline: none;
+}
+
+.vehicleInput::placeholder {
+  font-weight: 500;
+  color: var(--color-text-faint);
+}
+
+.vehicleDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--color-card-white);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  z-index: 10;
+}
+
+.vehicleOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.vehicleOption:last-child {
+  border-bottom: none;
+}
+
+.vehicleOption:hover {
+  background: var(--color-panel);
+}
+
+.vehicleOptionId {
+  font: 600 13px var(--font-mono);
+  color: var(--color-text);
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.vehicleOptionDesc {
+  font: 500 13px var(--font-sans);
+  color: var(--color-text-soft);
+  flex: 1;
+}
+
+.vehicleOptionHauler {
+  font: 500 11px var(--font-mono);
+  color: var(--color-text-faint);
+}
+
+/* right rail */
+
+.rightRail {
+  width: 392px;
+  background: var(--color-panel);
+  border-left: 1px solid var(--color-border-strong);
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.railLabel {
+  font: 600 11px var(--font-mono);
+  color: var(--color-text-faint);
+  letter-spacing: 0.12em;
+}
+
+.previewCard {
+  background: var(--color-card-white);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.previewHeader {
+  text-align: center;
+  border-bottom: 1.5px dashed var(--color-border);
+  padding-bottom: 11px;
+  margin-bottom: 11px;
+}
+
+.previewFacility {
+  font: 700 13px var(--font-sans);
+  color: var(--color-text);
+  letter-spacing: 0.04em;
+}
+
+.previewSub {
+  font: 500 10px var(--font-mono);
+  color: var(--color-text-faint);
+}
+
+.previewBody {
+  font: 500 11px/2 var(--font-mono);
+  color: var(--color-text-soft);
+}
+
+.previewRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.previewKey {
+  color: var(--color-text-faint);
+}
+
+.previewDivider {
+  border-top: 1px solid var(--color-border-soft);
+  margin: 9px 0 7px;
+}
+
+.previewNetRow {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  color: var(--color-text);
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.previewFaintRow {
+  color: var(--color-text-faint);
+}
+
+.recentList {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.recentRow {
+  background: var(--color-card-white);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius);
+  padding: 11px 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recentId {
+  font: 600 12px var(--font-mono);
+  color: var(--color-text);
+}
+
+.recentMeta {
+  font: 500 11px var(--font-sans);
+  color: var(--color-text-faint);
+}
+
+.recentNet {
+  font: 600 13px var(--font-mono);
+  color: var(--color-amber-text);
+}

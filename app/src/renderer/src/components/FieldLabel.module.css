@@ -1,0 +1,6 @@
+.label {
+  font: 600 11px var(--font-sans);
+  color: var(--color-text-muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 7px;
+}

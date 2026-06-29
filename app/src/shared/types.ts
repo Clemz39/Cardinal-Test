@@ -1,0 +1,108 @@
+export type TicketStatus = 'live' | 'done'
+export type TareSource = 'stored' | 'manual' | 'none'
+export type TareValidity = 'valid' | 'stale' | 'none'
+
+export interface Ticket {
+  id: string // zero-padded ticket number, e.g. "0048213"
+  createdAt: string // ISO timestamp
+  capturedAt: string | null
+  vehicleId: string | null
+  vehicleDesc: string | null
+  hauler: string | null
+  commodity: string | null
+  contractPo: string | null
+  originBin: string | null
+  gross: number | null // kg
+  tare: number | null // kg
+  net: number | null // kg
+  tareSource: TareSource
+  status: TicketStatus
+  direction: 'inbound' | 'outbound'
+}
+
+export interface Vehicle {
+  id: string // e.g. "TRK-148"
+  description: string // e.g. "Peterbilt 579"
+  hauler: string
+  plate: string
+  storedTare: number | null // kg
+  tareCapturedAt: string | null // ISO date
+}
+
+export interface VehicleWithStats extends Vehicle {
+  lastWeighed: string | null // ISO timestamp of most recent ticket, derived
+  tareValidity: TareValidity
+}
+
+export interface Product {
+  id: string
+  name: string
+  color: string
+  pricePerTonne: number
+}
+
+export interface ProductWithStats extends Product {
+  loadsToday: number // derived
+}
+
+export interface Settings {
+  // facility
+  facilityName: string
+  facilityAddress: string
+  ntepCert: string
+  operatorName: string
+  scaleLabel: string
+  // connection
+  serialPort: string
+  baudRate: number
+  protocol: string
+  dataBits: number
+  parity: string
+  stopBits: number
+  // scale configuration
+  scaleCapacityKg: number
+  scaleDivisionKg: number
+  lastCalibration: string // ISO date
+  tareValidityDays: number
+  // ticketing & printer
+  nextTicketNumber: number
+  printerName: string
+  autoPrint: boolean
+  copies: number
+}
+
+export interface ScaleReading {
+  gross: number // live raw scale weight, kg
+  stable: boolean
+  pushButtonTare: number // kg, 0 if not engaged
+  mode: 'GROSS' | 'NET'
+  raw: string // protocol line, e.g. "ST,GS,+035570 kg"
+}
+
+export interface ReportRange {
+  from: string // ISO
+  to: string // ISO
+}
+
+export type DateRangeKey = 'today' | 'week' | 'month'
+
+export interface ReportSummary {
+  netReceivedKg: number
+  ticketCount: number
+  inboundCount: number
+  outboundCount: number
+  avgNetPerLoadKg: number
+  topCommodity: string | null
+  topCommodityPct: number
+  commodityBars: { name: string; color: string; valueKg: number; pct: number }[]
+  topHaulers: { name: string; loads: number; netKg: number }[]
+}
+
+export interface TicketFilter {
+  range?: ReportRange
+  search?: string
+  commodity?: string
+  hauler?: string
+}
+
+export type DataEntity = 'tickets' | 'vehicles' | 'products' | 'settings' | 'draft'

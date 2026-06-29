@@ -1,0 +1,156 @@
+.screen {
+  padding: 24px 28px;
+}
+
+.headerRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.title {
+  font: 600 22px var(--font-sans);
+  color: var(--color-text);
+}
+
+.subtitle {
+  font: 500 12px var(--font-mono);
+  color: var(--color-text-faint);
+  margin-top: 3px;
+}
+
+/* table */
+
+.tableWrap {
+  background: var(--color-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.tableHead {
+  display: grid;
+  grid-template-columns: 1fr 180px 160px;
+  background: var(--color-table-head);
+  padding: 12px 18px;
+  font: 600 10px var(--font-mono);
+  color: var(--color-text-faint);
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--color-border-strong);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 180px 160px;
+  padding: 15px 18px;
+  align-items: center;
+  border-bottom: 1px solid var(--color-table-head);
+  cursor: pointer;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.rowSelected {
+  background: var(--color-amber-bg);
+}
+
+.nameCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.nameText {
+  font: 600 15px var(--font-sans);
+  color: var(--color-text);
+}
+
+.right {
+  text-align: right;
+}
+
+.priceCell {
+  font: 600 13px var(--font-mono);
+  color: var(--color-green-text);
+}
+
+.todayCell {
+  font: 500 12px var(--font-mono);
+  color: var(--color-text-faint);
+}
+
+.empty {
+  padding: 40px 16px;
+  text-align: center;
+  font: 500 13px var(--font-sans);
+  color: var(--color-text-faint);
+}
+
+/* edit panel */
+
+.editRow {
+  background: var(--color-panel);
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.editGrid {
+  display: grid;
+  grid-template-columns: 1fr 140px 160px;
+  gap: 16px;
+  align-items: end;
+}
+
+.swatchPicker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.swatchOption {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.swatchOptionActive {
+  border-color: var(--color-text);
+}
+
+.editActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.actionError {
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  background: var(--color-amber-bg);
+  border: 1px solid var(--color-amber-border);
+  border-radius: var(--radius);
+  color: var(--color-amber-text);
+  font: 600 12px var(--font-sans);
+}
+
+/* add form */
+
+.addRow {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--color-table-head);
+  background: var(--color-panel);
+}

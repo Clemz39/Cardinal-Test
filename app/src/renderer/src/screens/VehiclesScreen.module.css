@@ -1,0 +1,332 @@
+.screen {
+  padding: 24px 28px;
+  display: flex;
+  gap: 22px;
+  height: 100%;
+}
+
+/* list column */
+
+.listCol {
+  width: 46%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.listHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.title {
+  font: 600 22px var(--font-sans);
+  color: var(--color-text);
+}
+
+.subtitle {
+  font: 500 12px var(--font-mono);
+  color: var(--color-text-faint);
+  margin-top: 3px;
+}
+
+.search {
+  margin-bottom: 12px;
+  font: 500 13px var(--font-sans);
+  padding: 10px 14px;
+}
+
+.listWrap {
+  background: var(--color-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-divider);
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.rowSelected {
+  background: var(--color-amber-bg);
+  border-left: 3px solid var(--color-accent);
+}
+
+.rowTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rowId {
+  font: 700 14px var(--font-mono);
+  color: var(--color-text);
+}
+
+.rowDesc {
+  font: 500 12px var(--font-sans);
+  color: var(--color-text-muted);
+}
+
+.rowMeta {
+  font: 500 11px var(--font-sans);
+  color: var(--color-text-faint);
+  margin-top: 3px;
+}
+
+.rowRight {
+  text-align: right;
+}
+
+.rowTare {
+  font: 600 14px var(--font-mono);
+  color: var(--color-text);
+}
+
+.rowBadgeValid {
+  font: 500 10px var(--font-mono);
+  color: var(--color-green-text);
+  margin-top: 2px;
+}
+
+.rowBadgeStale {
+  font: 500 10px var(--font-mono);
+  color: var(--color-amber-text);
+  margin-top: 2px;
+}
+
+.listEmpty {
+  padding: 40px 16px;
+  text-align: center;
+  font: 500 13px var(--font-sans);
+  color: var(--color-text-faint);
+}
+
+/* detail column */
+
+.detail {
+  flex: 1;
+  background: var(--color-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.detailEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font: 500 13px var(--font-sans);
+  color: var(--color-text-faint);
+}
+
+.detailHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border-soft);
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+}
+
+.detailId {
+  font: 700 24px var(--font-mono);
+  color: var(--color-text);
+}
+
+.detailMeta {
+  font: 500 13px var(--font-sans);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.validPill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+
+.validPillGreen {
+  background: var(--color-green-bg);
+  border: 1px solid var(--color-green-border);
+}
+
+.validPillAmber {
+  background: var(--color-amber-bg);
+  border: 1px solid var(--color-amber-border);
+}
+
+.validPillNeutral {
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+}
+
+.validPillText {
+  font: 600 12px var(--font-sans);
+}
+
+/* tare grid */
+
+.tareGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.tareCard {
+  background: var(--color-chrome-darker);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+}
+
+.tareLabel {
+  font: 600 10px var(--font-mono);
+  color: var(--color-amber-dim);
+  letter-spacing: 0.14em;
+  margin-bottom: 8px;
+}
+
+.tareValue {
+  font: 700 38px/1 var(--font-mono);
+  color: var(--color-amber);
+  text-shadow: 0 0 14px rgba(255, 176, 0, 0.45);
+}
+
+.tareUnit {
+  font-size: 14px;
+  color: var(--color-amber-dim);
+}
+
+.tareCaption {
+  font: 500 11px var(--font-mono);
+  color: #7d7d72;
+  margin-top: 8px;
+}
+
+.liveBadgeRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.tareActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* manual tare entry */
+
+.manualForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+}
+
+.manualActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+/* add vehicle form */
+
+.addGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.formActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.actionError {
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  background: var(--color-amber-bg);
+  border: 1px solid var(--color-amber-border);
+  border-radius: var(--radius);
+  color: var(--color-amber-text);
+  font: 600 12px var(--font-sans);
+}
+
+/* history */
+
+.historyLabel {
+  font: 600 11px var(--font-mono);
+  color: var(--color-text-faint);
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+
+.historyWrap {
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.historyRow {
+  display: grid;
+  grid-template-columns: 90px 1fr 110px 100px;
+  padding: 11px 14px;
+  font: 500 12px var(--font-mono);
+  color: var(--color-text-soft);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.historyRow:last-child {
+  border-bottom: none;
+}
+
+.historyId {
+  font-weight: 600;
+  color: var(--color-amber-text);
+}
+
+.historyCommodity {
+  font-family: var(--font-sans);
+}
+
+.historyNet {
+  text-align: right;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.historyDate {
+  text-align: right;
+  color: var(--color-text-faint);
+}
+
+.historyEmpty {
+  padding: 20px;
+  text-align: center;
+  font: 500 12px var(--font-sans);
+  color: var(--color-text-faint);
+}

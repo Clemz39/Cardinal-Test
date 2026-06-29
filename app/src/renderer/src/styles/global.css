@@ -1,0 +1,120 @@
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+@import '@fontsource/ibm-plex-mono/700.css';
+
+:root {
+  /* surfaces */
+  --color-bg: #e6e4dd;
+  --color-chrome-dark: #1b1c18;
+  --color-chrome-darker: #0e0f0c;
+  --color-chrome-border: #313229;
+  --color-chrome-border-soft: #34352d;
+  --color-chrome-border-faint: #2a2b25;
+  --color-chrome-surface: #23241f;
+  --color-chrome-surface-2: #070806;
+  --color-card: #faf9f5;
+  --color-card-white: #fff;
+  --color-panel: #f1efe9;
+  --color-table-head: #eceae3;
+
+  /* borders */
+  --color-border: #cfccc2;
+  --color-border-strong: #d4d1c8;
+  --color-border-soft: #e3e0d8;
+  --color-divider: #eceae3;
+
+  /* text */
+  --color-text: #1c1d19;
+  --color-text-soft: #3a3b34;
+  --color-text-muted: #6f6e64;
+  --color-text-faint: #8a897f;
+  --color-text-on-dark: #e9e7df;
+  --color-text-on-dark-muted: #94938a;
+  --color-text-on-dark-faint: #b6b5ab;
+  --color-text-on-dark-dim: #6f7068;
+  --color-text-on-dark-dimmer: #5b5c54;
+  --color-text-on-dark-soft: #cfcdc4;
+  --color-text-on-dark-subtle: #9a9890;
+
+  /* brand / accent */
+  --color-accent: #e0951f;
+  --color-accent-strong: #b8862e;
+  --color-amber: #ffb000;
+  --color-amber-dim: #7a5a1e;
+  --color-amber-label: #caa45a;
+  --color-amber-text: #9a6a14;
+  --color-amber-bg: #f6ecd6;
+  --color-amber-border: #e0c98c;
+
+  /* status green */
+  --color-green: #37b06a;
+  --color-green-text: #2f6e4a;
+  --color-green-text-strong: #2f8f57;
+  --color-green-bg: #e7f0ea;
+  --color-green-border: #b8d6c4;
+  --color-green-dim-bg: #13261a;
+  --color-green-dim-border: #1f4a30;
+  --color-green-dim-text: #6fc792;
+
+  /* misc */
+  --color-tare-green: #7da98f;
+  --color-stream-text: #6f8a78;
+  --color-stream-warn: #9a7a3a;
+
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --radius-sm: 2px;
+  --radius: 3px;
+  --radius-md: 4px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  background: var(--color-bg);
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+}
+
+button {
+  font-family: inherit;
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+*::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #bdbab0;
+  border-radius: 6px;
+  border: 2px solid var(--color-bg);
+}

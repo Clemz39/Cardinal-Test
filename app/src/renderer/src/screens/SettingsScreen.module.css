@@ -1,0 +1,209 @@
+.screen {
+  padding: 24px 28px;
+  max-width: 1100px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.title {
+  font: 600 22px var(--font-sans);
+  color: var(--color-text);
+}
+
+.subtitle {
+  font: 500 12px var(--font-mono);
+  color: var(--color-text-faint);
+  margin-top: 3px;
+}
+
+.body {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* connection card */
+
+.connectionCard {
+  flex: 1;
+  background: var(--color-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.connectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-chrome-dark);
+  padding: 16px 22px;
+}
+
+.connectionName {
+  font: 700 14px var(--font-sans);
+  color: var(--color-text-on-dark);
+}
+
+.connectionFw {
+  font: 500 11px var(--font-mono);
+  color: var(--color-text-on-dark-muted);
+  margin-top: 2px;
+}
+
+.statusPill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--color-green-dim-bg);
+  border: 1px solid var(--color-green-dim-border);
+  padding: 7px 13px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.statusText {
+  font: 600 12px var(--font-mono);
+  color: var(--color-green-dim-text);
+}
+
+.connectionGrid {
+  padding: 22px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px 20px;
+}
+
+.connectionSelect {
+  background: var(--color-card-white);
+  font: 500 14px var(--font-mono);
+  padding: 12px 14px;
+}
+
+/* live stream test */
+
+.streamPanel {
+  margin: 0 22px 22px;
+  background: var(--color-chrome-surface-2);
+  border: 1px solid var(--color-chrome-surface);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+}
+
+.streamHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.streamLabel {
+  font: 600 10px var(--font-mono);
+  color: var(--color-text-on-dark-dimmer);
+  letter-spacing: 0.14em;
+}
+
+.streamButton {
+  font: 600 11px var(--font-sans);
+  color: var(--color-chrome-darker);
+  background: var(--color-green);
+  padding: 5px 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  border: none;
+}
+
+.streamLines {
+  font: 400 12px/1.9 var(--font-mono);
+  color: var(--color-stream-text);
+}
+
+.streamLineWarn {
+  color: var(--color-stream-warn);
+}
+
+.streamEmpty {
+  font: 500 12px var(--font-mono);
+  color: var(--color-text-on-dark-dimmer);
+}
+
+/* side column */
+
+.sideCol {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.sideCard {
+  background: var(--color-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: 20px;
+}
+
+.sideCardTitle {
+  font: 700 13px var(--font-sans);
+  color: var(--color-text);
+  margin-bottom: 16px;
+}
+
+.rowList {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.kvRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kvLabel {
+  font: 500 13px var(--font-sans);
+  color: var(--color-text-muted);
+}
+
+.kvValue {
+  font: 600 13px var(--font-mono);
+  color: var(--color-text);
+}
+
+.kvInput {
+  width: 90px;
+  text-align: right;
+  font: 600 13px var(--font-mono);
+  padding: 7px 10px;
+}
+
+.kvTextInput {
+  width: 150px;
+  text-align: right;
+  font: 600 13px var(--font-mono);
+  padding: 7px 10px;
+}
+
+.togglePill {
+  font: 600 11px var(--font-sans);
+  padding: 4px 11px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid;
+}
+
+.toggleOn {
+  color: var(--color-green-text);
+  background: var(--color-green-bg);
+  border-color: var(--color-green-border);
+}
+
+.toggleOff {
+  color: var(--color-text-faint);
+  background: var(--color-panel);
+  border-color: var(--color-border);
+}

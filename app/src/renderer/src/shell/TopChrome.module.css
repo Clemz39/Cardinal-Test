@@ -1,0 +1,109 @@
+.chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-chrome-dark);
+  padding: 0 16px;
+  height: 52px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--color-chrome-border);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.logo {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logoDot {
+  width: 9px;
+  height: 9px;
+  background: var(--color-accent);
+}
+
+.wordmark {
+  font: 700 14px var(--font-sans);
+  color: var(--color-text-on-dark);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.scaleLabel {
+  font: 500 12px var(--font-mono);
+  color: var(--color-text-on-dark-muted);
+  padding-left: 12px;
+  border-left: 1px solid var(--color-chrome-border-soft);
+  white-space: nowrap;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.tab {
+  font: 500 12px var(--font-sans);
+  color: var(--color-text-on-dark-faint);
+  background: transparent;
+  border: none;
+  padding: 7px 11px;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--color-text-on-dark);
+}
+
+.tabActive,
+.tabActive:hover {
+  font-weight: 600;
+  color: var(--color-chrome-dark);
+  background: var(--color-accent);
+  padding: 7px 13px;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.connection {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--color-chrome-surface);
+  border: 1px solid var(--color-chrome-border-soft);
+  padding: 6px 11px;
+  border-radius: var(--radius);
+  font: 500 11px var(--font-mono);
+  color: var(--color-text-on-dark-soft);
+  white-space: nowrap;
+}
+
+.operator {
+  font: 500 12px var(--font-mono);
+  color: var(--color-text-on-dark-muted);
+  white-space: nowrap;
+}
+
+.clock {
+  font: 500 12px var(--font-mono);
+  color: var(--color-text-on-dark-soft);
+  white-space: nowrap;
+}
