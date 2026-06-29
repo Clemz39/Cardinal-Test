@@ -1,6 +1,7 @@
 import { ipcMain, BrowserWindow } from 'electron'
 import { scaleSimulator } from '../scaleSimulator'
 import { dataBus } from '../events'
+import { login, logout, getCurrentUser } from '../authSession'
 import {
   getDraft,
   newDraft,
@@ -35,6 +36,10 @@ function broadcast(channel: string, payload: unknown): void {
 }
 
 export function registerIpcHandlers(): void {
+  ipcMain.handle('auth:login', (_e, username: string, pin: string) => login(username, pin))
+  ipcMain.handle('auth:logout', () => logout())
+  ipcMain.handle('auth:current', () => getCurrentUser())
+
   ipcMain.handle('draft:get', () => getDraft())
   ipcMain.handle('draft:reset', () => newDraft())
   ipcMain.handle('draft:setVehicle', (_e, vehicleId: string | null) => setDraftVehicle(vehicleId))

@@ -1,4 +1,5 @@
 import type {
+  AuthUser,
   DataEntity,
   Product,
   ProductWithStats,
@@ -15,6 +16,11 @@ import type {
 export type OkResult = { ok: boolean; reason?: string }
 
 export interface CardinalApi {
+  auth: {
+    login(username: string, pin: string): Promise<OkResult & { user?: AuthUser }>
+    logout(): Promise<void>
+    current(): Promise<AuthUser | null>
+  }
   draft: {
     get(): Promise<Ticket>
     reset(): Promise<Ticket>

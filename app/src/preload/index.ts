@@ -3,6 +3,11 @@ import type { CardinalApi } from '../shared/ipc'
 import type { DataEntity, ScaleReading } from '../shared/types'
 
 const api: CardinalApi = {
+  auth: {
+    login: (username, pin) => ipcRenderer.invoke('auth:login', username, pin),
+    logout: () => ipcRenderer.invoke('auth:logout'),
+    current: () => ipcRenderer.invoke('auth:current')
+  },
   draft: {
     get: () => ipcRenderer.invoke('draft:get'),
     reset: () => ipcRenderer.invoke('draft:reset'),

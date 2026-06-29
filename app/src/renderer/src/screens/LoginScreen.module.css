@@ -1,0 +1,92 @@
+.screen {
+  width: 100%;
+  height: 100vh;
+  min-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-chrome-darker);
+}
+
+.card {
+  width: 380px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.header {
+  background: var(--color-chrome-dark);
+  padding: 28px 30px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+}
+
+.logo {
+  width: 34px;
+  height: 34px;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoDot {
+  width: 13px;
+  height: 13px;
+  background: var(--color-accent);
+}
+
+.wordmark {
+  font: 700 15px var(--font-sans);
+  color: var(--color-text-on-dark);
+  letter-spacing: 0.02em;
+}
+
+.subtitle {
+  font: 500 11px var(--font-mono);
+  color: var(--color-text-on-dark-muted);
+  letter-spacing: 0.05em;
+}
+
+.body {
+  padding: 26px 30px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  font: 600 16px var(--font-sans);
+  color: var(--color-text);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.error {
+  padding: 10px 14px;
+  background: var(--color-amber-bg);
+  border: 1px solid var(--color-amber-border);
+  border-radius: var(--radius);
+  color: var(--color-amber-text);
+  font: 600 12px var(--font-sans);
+}
+
+.submit {
+  padding: 13px;
+  font-size: 14px;
+}
+
+.hint {
+  text-align: center;
+  font: 500 11px var(--font-mono);
+  color: var(--color-text-faint);
+}

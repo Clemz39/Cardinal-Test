@@ -30,6 +30,14 @@ CREATE TABLE IF NOT EXISTS settings (
   copies INTEGER NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  username TEXT NOT NULL UNIQUE,
+  pin TEXT NOT NULL,
+  role TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS vehicles (
   id TEXT PRIMARY KEY,
   description TEXT NOT NULL,
@@ -69,11 +77,21 @@ CREATE INDEX IF NOT EXISTS idx_tickets_vehicleId ON tickets(vehicleId);
 CREATE INDEX IF NOT EXISTS idx_tickets_status ON tickets(status);
 `
 
-function seedIfEmpty(database: Database.Database): void {
+function seedUsersIfEmpty(database: Database.Database, users: ReturnType<typeof buildSeed>['users']): void {
+  const row = database.prepare('SELECT COUNT(*) as c FROM users').get() as { c: number }
+  if (row.c > 0) return
+  const insertUser = database.prepare(`
+    INSERT INTO users (id, name, username, pin, role) VALUES (@id, @name, @username, @pin, @role)
+  `)
+  const tx = database.transaction(() => {
+    for (const u of users) insertUser.run(u)
+  })
+  tx()
+}
+
+function seedIfEmpty(database: Database.Database, seed: ReturnType<typeof buildSeed>): void {
   const row = database.prepare('SELECT COUNT(*) as c FROM settings').get() as { c: number }
   if (row.c > 0) return
-
-  const seed = buildSeed(new Date())
 
   const insertSettings = database.prepare(`
     INSERT INTO settings (
@@ -127,7 +145,9 @@ export function getDb(): Database.Database {
   db.pragma('journal_mode = WAL')
   db.pragma('foreign_keys = ON')
   db.exec(SCHEMA)
-  seedIfEmpty(db)
+  const seed = buildSeed(new Date())
+  seedIfEmpty(db, seed)
+  seedUsersIfEmpty(db, seed.users)
 
   return db
 }

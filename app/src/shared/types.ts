@@ -106,3 +106,12 @@ export interface TicketFilter {
 }
 
 export type DataEntity = 'tickets' | 'vehicles' | 'products' | 'settings' | 'draft'
+
+export type UserRole = 'operator' | 'technician'
+
+export interface AuthUser {
+  id: string
+  name: string
+  username: string
+  role: UserRole
+}

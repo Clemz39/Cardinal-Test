@@ -1,4 +1,4 @@
-import type { Product, Settings, Ticket, Vehicle } from '../shared/types'
+import type { AuthUser, Product, Settings, Ticket, Vehicle } from '../shared/types'
 import { createRng, pick, randInt } from './rng'
 import { formatTicketNumber } from '../shared/format'
 
@@ -14,6 +14,7 @@ export interface SeedData {
   vehicles: Vehicle[]
   products: Product[]
   tickets: Ticket[]
+  users: (AuthUser & { pin: string })[]
 }
 
 export function buildSeed(now: Date = new Date()): SeedData {
@@ -187,5 +188,10 @@ export function buildSeed(now: Date = new Date()): SeedData {
     copies: 2
   }
 
-  return { settings, vehicles, products, tickets }
+  const users: (AuthUser & { pin: string })[] = [
+    { id: 'jmercer', name: 'J. Mercer', username: 'jmercer', pin: '1234', role: 'operator' },
+    { id: 'rcastillo', name: 'R. Castillo', username: 'rcastillo', pin: '4242', role: 'technician' }
+  ]
+
+  return { settings, vehicles, products, tickets, users }
 }

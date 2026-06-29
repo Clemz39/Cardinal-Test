@@ -107,3 +107,18 @@
   color: var(--color-text-on-dark-soft);
   white-space: nowrap;
 }
+
+.logout {
+  font: 500 11px var(--font-sans);
+  color: var(--color-text-on-dark-faint);
+  background: transparent;
+  border: 1px solid var(--color-chrome-border-soft);
+  padding: 6px 11px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.logout:hover {
+  color: var(--color-text-on-dark);
+}

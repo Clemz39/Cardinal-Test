@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react'
+import { Badge } from '../components/Badge'
 import { Dot } from '../components/Dot'
 import { cx } from '../lib/cx'
 import { formatDateTime } from '@shared/format'
 import { useDataChanged } from '../hooks/useDataChanged'
-import type { Settings } from '@shared/types'
+import type { AuthUser, Settings } from '@shared/types'
 import styles from './TopChrome.module.css'
 
 export type AppScreen = 'weigh' | 'tickets' | 'vehicles' | 'products' | 'reports' | 'settings'
+
+export const ROLE_SCREENS: Record<AuthUser['role'], AppScreen[]> = {
+  operator: ['weigh', 'tickets', 'vehicles', 'reports'],
+  technician: ['weigh', 'tickets', 'vehicles', 'products', 'reports', 'settings']
+}
 
 const TABS: { key: AppScreen; label: string }[] = [
   { key: 'weigh', label: 'Weigh' },
@@ -24,11 +30,14 @@ function serialSummary(s: Settings): string {
 interface TopChromeProps {
   screen: AppScreen
   onNavigate: (screen: AppScreen) => void
+  currentUser: AuthUser
+  onLogout: () => void
 }
 
-export function TopChrome({ screen, onNavigate }: TopChromeProps) {
+export function TopChrome({ screen, onNavigate, currentUser, onLogout }: TopChromeProps) {
   const [settings, setSettings] = useState<Settings | null>(null)
   const [now, setNow] = useState(() => new Date())
+  const tabs = TABS.filter((tab) => ROLE_SCREENS[currentUser.role].includes(tab.key))
 
   const loadSettings = (): void => {
     window.api.settings.get().then(setSettings)
@@ -52,7 +61,7 @@ export function TopChrome({ screen, onNavigate }: TopChromeProps) {
       </div>
 
       <nav className={styles.tabs}>
-        {TABS.map((tab) => (
+        {tabs.map((tab) => (
           <button
             key={tab.key}
             type="button"
@@ -69,7 +78,13 @@ export function TopChrome({ screen, onNavigate }: TopChromeProps) {
           <Dot color="var(--color-green)" glow pulse />
           <span>{settings ? serialSummary(settings) : ''}</span>
         </div>
-        <div className={styles.operator}>{settings?.operatorName ?? ''}</div>
+        <div className={styles.operator}>{currentUser.name}</div>
+        <Badge tone="dark" variant="outline" pill>
+          {currentUser.role === 'technician' ? 'TECH' : 'OPERATOR'}
+        </Badge>
+        <button type="button" className={styles.logout} onClick={onLogout}>
+          Log Out
+        </button>
         <div className={styles.clock}>{formatDateTime(now.toISOString())}</div>
       </div>
     </header>
