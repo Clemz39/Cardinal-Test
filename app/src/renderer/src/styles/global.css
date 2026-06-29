@@ -9,41 +9,42 @@
 
 :root {
   /* surfaces */
-  --color-bg: #e6e4dd;
-  --color-chrome-dark: #1b1c18;
-  --color-chrome-darker: #0e0f0c;
-  --color-chrome-border: #313229;
-  --color-chrome-border-soft: #34352d;
-  --color-chrome-border-faint: #2a2b25;
-  --color-chrome-surface: #23241f;
-  --color-chrome-surface-2: #070806;
-  --color-card: #faf9f5;
+  --color-bg: #e6e9ef;
+  --color-chrome-dark: #122249;
+  --color-chrome-darker: #0a1530;
+  --color-chrome-border: #2a3f6e;
+  --color-chrome-border-soft: #2e4576;
+  --color-chrome-border-faint: #1c2f59;
+  --color-chrome-surface: #1a3061;
+  --color-chrome-surface-2: #071025;
+  --color-card: #fafbfd;
   --color-card-white: #fff;
-  --color-panel: #f1efe9;
-  --color-table-head: #eceae3;
+  --color-panel: #eef1f6;
+  --color-table-head: #e6eaf1;
 
   /* borders */
-  --color-border: #cfccc2;
-  --color-border-strong: #d4d1c8;
-  --color-border-soft: #e3e0d8;
-  --color-divider: #eceae3;
+  --color-border: #c6cddb;
+  --color-border-strong: #ccd3e0;
+  --color-border-soft: #dfe3ec;
+  --color-divider: #e6eaf1;
 
   /* text */
-  --color-text: #1c1d19;
-  --color-text-soft: #3a3b34;
-  --color-text-muted: #6f6e64;
-  --color-text-faint: #8a897f;
-  --color-text-on-dark: #e9e7df;
-  --color-text-on-dark-muted: #94938a;
-  --color-text-on-dark-faint: #b6b5ab;
-  --color-text-on-dark-dim: #6f7068;
-  --color-text-on-dark-dimmer: #5b5c54;
-  --color-text-on-dark-soft: #cfcdc4;
-  --color-text-on-dark-subtle: #9a9890;
+  --color-text: #101b33;
+  --color-text-soft: #303f5e;
+  --color-text-muted: #5d6c87;
+  --color-text-faint: #8590a6;
+  --color-text-on-dark: #e8edf8;
+  --color-text-on-dark-muted: #9bacc9;
+  --color-text-on-dark-faint: #b7c4dc;
+  --color-text-on-dark-dim: #6a7ea2;
+  --color-text-on-dark-dimmer: #546388;
+  --color-text-on-dark-soft: #ccd6e8;
+  --color-text-on-dark-subtle: #8c9bb8;
 
   /* brand / accent */
-  --color-accent: #e0951f;
-  --color-accent-strong: #b8862e;
+  --color-accent: #f0a83c;
+  --color-accent-strong: #c9842a;
+  --color-blue-accent: #3a78e0;
   --color-amber: #ffb000;
   --color-amber-dim: #7a5a1e;
   --color-amber-label: #caa45a;

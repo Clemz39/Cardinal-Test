@@ -7,7 +7,7 @@ import { cx } from '../lib/cx'
 import type { Product, ProductWithStats } from '@shared/types'
 import styles from './ProductsScreen.module.css'
 
-const SWATCHES = ['#e0951f', '#6b8f3a', '#b8862e', '#a6452e', '#c9a24a', '#4a7a8c', '#8a6bb0']
+const SWATCHES = ['#f0a83c', '#6b8f3a', '#3a78e0', '#a6452e', '#c9a24a', '#4a7a8c', '#8a6bb0']
 
 const EMPTY_FORM = { name: '', color: SWATCHES[0], pricePerTonne: '' }
 type ProductFormState = typeof EMPTY_FORM
