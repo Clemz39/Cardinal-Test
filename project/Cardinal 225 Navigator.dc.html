@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%}
+  body{font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:#e6e4dd}
+  @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.35}}
+  *::-webkit-scrollbar{width:11px;height:11px}
+  *::-webkit-scrollbar-thumb{background:#bdbab0;border-radius:6px;border:2px solid #e6e4dd}
+</style>
+</helmet>
+
+<div style="width:100%;height:100vh;min-width:1200px;display:flex;flex-direction:column;background:#e6e4dd">
+
+  <!-- ===================== TOP CHROME ===================== -->
+  <div style="display:flex;align-items:center;justify-content:space-between;background:#1b1c18;padding:0 16px;height:52px;flex-shrink:0;border-bottom:1px solid #313229">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="width:24px;height:24px;border:2px solid #e0951f;border-radius:3px;display:flex;align-items:center;justify-content:center"><div style="width:9px;height:9px;background:#e0951f"></div></div>
+      <div style="font:700 14px 'IBM Plex Sans';color:#e9e7df;letter-spacing:.02em">CARDINAL 225 NAVIGATOR</div>
+      <div style="font:500 12px 'IBM Plex Mono';color:#94938a;padding-left:12px;border-left:1px solid #34352d">Scale 1 · Inbound</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:2px">
+      <div style="{{ tabWeigh }}" onClick="{{ goWeigh }}">Weigh</div>
+      <div style="{{ tabTickets }}" onClick="{{ goTickets }}">Tickets</div>
+      <div style="{{ tabVehicles }}" onClick="{{ goVehicles }}">Vehicles</div>
+      <div style="{{ tabProducts }}" onClick="{{ goProducts }}">Products</div>
+      <div style="{{ tabReports }}" onClick="{{ goReports }}">Reports</div>
+      <div style="{{ tabSettings }}" onClick="{{ goSettings }}">Settings</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="display:flex;align-items:center;gap:7px;background:#23241f;border:1px solid #34352d;padding:6px 11px;border-radius:3px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#37b06a;box-shadow:0 0 7px #37b06a;animation:pulseDot 2s infinite"></div>
+        <span style="font:500 11px 'IBM Plex Mono';color:#cfcdc4">COM3 · 9600 8-N-1</span>
+      </div>
+      <div style="font:500 12px 'IBM Plex Mono';color:#94938a">J. Mercer</div>
+      <div style="font:500 12px 'IBM Plex Mono';color:#cfcdc4">06/28/26 14:32</div>
+    </div>
+  </div>
+
+  <div style="flex:1;overflow:auto">
+
+  <!-- ===================== WEIGH ===================== -->
+  <sc-if value="{{ isWeigh }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;flex-direction:column;min-height:100%">
+    <!-- LED banner -->
+    <div style="background:#0e0f0c;display:flex;align-items:stretch;height:130px;flex-shrink:0;border-bottom:1px solid #313229">
+      <div style="flex:1;display:flex;align-items:center;gap:34px;padding:0 30px">
+        <div>
+          <div style="font:600 10px 'IBM Plex Mono';color:#7a5a1e;letter-spacing:.18em;margin-bottom:3px">NET · kg</div>
+          <div style="font:700 68px/1 'IBM Plex Mono';color:#ffb000;letter-spacing:1px;text-shadow:0 0 18px rgba(255,176,0,.5)">21,390</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;padding-left:32px;border-left:1px solid #23241f">
+          <div style="display:flex;gap:20px;align-items:baseline"><span style="font:600 10px 'IBM Plex Mono';color:#6f7068;letter-spacing:.12em;width:48px">GROSS</span><span style="font:600 24px 'IBM Plex Mono';color:#ffb000">35,570</span></div>
+          <div style="display:flex;gap:20px;align-items:baseline"><span style="font:600 10px 'IBM Plex Mono';color:#6f7068;letter-spacing:.12em;width:48px">TARE</span><span style="font:600 24px 'IBM Plex Mono';color:#7da98f">14,180</span></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;padding:0 28px;border-left:1px solid #23241f">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="font:600 10px 'IBM Plex Mono';color:#0e0f0c;background:#37b06a;padding:6px 14px;border-radius:2px;letter-spacing:.1em;text-align:center">● STABLE</div>
+          <div style="font:600 10px 'IBM Plex Mono';color:#6f7068;border:1px solid #2a2b25;padding:6px 14px;border-radius:2px;letter-spacing:.1em;text-align:center">GROSS MODE</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="display:flex;gap:9px">
+            <div style="font:600 12px 'IBM Plex Sans';color:#e9e7df;background:#23241f;border:1px solid #34352d;padding:10px 18px;border-radius:3px;cursor:pointer">ZERO</div>
+            <div style="font:600 12px 'IBM Plex Sans';color:#e9e7df;background:#23241f;border:1px solid #34352d;padding:10px 18px;border-radius:3px;cursor:pointer">TARE</div>
+          </div>
+          <div style="font:700 13px 'IBM Plex Sans';color:#0e0f0c;background:#e0951f;padding:11px 18px;border-radius:3px;text-align:center;letter-spacing:.03em;box-shadow:0 0 16px rgba(224,149,31,.3);cursor:pointer">⚖  CAPTURE GROSS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- body -->
+    <div style="display:flex;flex:1">
+      <div style="flex:1;padding:22px 26px;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:baseline;gap:14px">
+            <span style="font:600 11px 'IBM Plex Mono';color:#8a897f;letter-spacing:.1em">TICKET</span>
+            <span style="font:700 26px 'IBM Plex Mono';color:#1c1d19">0048213</span>
+            <span style="font:500 12px 'IBM Plex Mono';color:#8a897f">06/28/2026 · 14:32</span>
+          </div>
+          <span style="font:600 11px 'IBM Plex Sans';color:#9a6a14;background:#f6ecd6;border:1px solid #e0c98c;padding:6px 12px;border-radius:3px">INBOUND · ONE-PASS</span>
+        </div>
+
+        <div>
+          <div style="font:600 11px 'IBM Plex Sans';color:#6f6e64;letter-spacing:.06em;margin-bottom:7px">VEHICLE — TYPE OR SCAN ID</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:#faf9f5;border:1.5px solid #b8862e;border-radius:3px;padding:14px 16px">
+            <span style="font:600 19px 'IBM Plex Sans';color:#1c1d19">TRK-148 &nbsp;·&nbsp; Peterbilt 579</span>
+            <span style="display:flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:#2f8f57"></span><span style="font:500 12px 'IBM Plex Mono';color:#2f6e4a">Stored tare 14,180 kg · 03/12/26</span></span>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div><div style="font:600 11px 'IBM Plex Sans';color:#6f6e64;letter-spacing:.06em;margin-bottom:7px">HAULER / CUSTOMER</div><div style="background:#faf9f5;border:1px solid #cfccc2;border-radius:3px;padding:13px 15px;font:500 15px 'IBM Plex Sans';color:#1c1d19">Prairie Gold Co-op ▾</div></div>
+          <div><div style="font:600 11px 'IBM Plex Sans';color:#6f6e64;letter-spacing:.06em;margin-bottom:7px">COMMODITY</div><div style="background:#faf9f5;border:1px solid #cfccc2;border-radius:3px;padding:13px 15px;font:500 15px 'IBM Plex Sans';color:#1c1d19">Corn #2 Yellow ▾</div></div>
+          <div><div style="font:600 11px 'IBM Plex Sans';color:#6f6e64;letter-spacing:.06em;margin-bottom:7px">CONTRACT / PO</div><div style="background:#faf9f5;border:1px solid #cfccc2;border-radius:3px;padding:13px 15px;font:500 15px 'IBM Plex Mono';color:#1c1d19">CN-22841</div></div>
+          <div><div style="font:600 11px 'IBM Plex Sans';color:#6f6e64;letter-spacing:.06em;margin-bottom:7px">ORIGIN BIN</div><div style="background:#faf9f5;border:1px solid #cfccc2;border-radius:3px;padding:13px 15px;font:500 15px 'IBM Plex Sans';color:#1c1d19">Field 7 · Bin 3</div></div>
+        </div>
+
+        <div style="margin-top:auto;display:flex;gap:11px">
+          <div style="font:600 13px 'IBM Plex Sans';color:#6f6e64;border:1px solid #cfccc2;background:#faf9f5;padding:14px 22px;border-radius:3px;cursor:pointer">New</div>
+          <div style="font:600 13px 'IBM Plex Sans';color:#1c1d19;border:1px solid #cfccc2;background:#faf9f5;padding:14px 22px;border-radius:3px;cursor:pointer">Save Ticket</div>
+          <div style="flex:1"></div>
+          <div onClick="{{ openPrint }}" style="font:700 13px 'IBM Plex Sans';color:#0e0f0c;background:#e0951f;padding:14px 32px;border-radius:3px;letter-spacing:.03em;cursor:pointer">🖶  Print Ticket</div>
+        </div>
+      </div>
+
+      <!-- right rail -->
+      <div style="width:392px;background:#f1efe9;border-left:1px solid #d4d1c8;padding:20px 22px;display:flex;flex-direction:column;gap:18px">
+        <div style="font:600 11px 'IBM Plex Mono';color:#8a897f;letter-spacing:.12em">TICKET PREVIEW</div>
+        <div style="background:#fff;border:1px solid #d4d1c8;border-radius:3px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="text-align:center;border-bottom:1.5px dashed #cfccc2;padding-bottom:11px;margin-bottom:11px">
+            <div style="font:700 13px 'IBM Plex Sans';color:#1c1d19;letter-spacing:.04em">PRAIRIE GOLD CO-OP</div>
+            <div style="font:500 10px 'IBM Plex Mono';color:#8a897f">SCALE TICKET · No. 0048213</div>
+          </div>
+          <div style="font:500 11px/2 'IBM Plex Mono';color:#3a3b34">
+            <div style="display:flex;justify-content:space-between"><span style="color:#8a897f">DATE</span><span>06/28/26 14:32</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:#8a897f">VEHICLE</span><span>TRK-148</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:#8a897f">COMMODITY</span><span>Corn #2 Yellow</span></div>
+            <div style="border-top:1px solid #e3e0d8;margin:9px 0 7px"></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:#8a897f">GROSS</span><span>35,570 kg</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:#8a897f">TARE</span><span>14,180 kg</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:700;color:#1c1d19;font-size:13px;margin-top:5px"><span>NET</span><span>21,390 kg</span></div>
+            <div style="display:flex;justify-content:space-between;color:#8a897f"><span>TONNES</span><span>21.4 t</span></div>
+          </div>
+        </div>
+        <div style="font:600 11px 'IBM Plex Mono';color:#8a897f;letter-spacing:.12em;margin-top:2px">RECENT TICKETS</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="background:#fff;border:1px solid #d4d1c8;border-radius:3px;padding:11px 13px;display:flex;justify-content:space-between;align-items:center"><div><div style="font:600 12px 'IBM Plex Mono';color:#1c1d19">0048212 · TRK-203</div><div style="font:500 11px 'IBM Plex Sans';color:#8a897f">Soybeans · 14:18</div></div><div style="font:600 13px 'IBM Plex Mono';color:#9a6a14">21,310 kg</div></div>
+          <div style="background:#fff;border:1px solid #d4d1c8;border-radius:3px;padding:11px 13px;display:flex;justify-content:space-between;align-items:center"><div><div style="font:600 12px 'IBM Plex Mono';color:#1c1d19">0048211 · TRK-077</div><div style="font:500 11px 'IBM Plex Sans';color:#8a897f">Corn #2Y · 14:02</div></div><div style="font:600 13px 'IBM Plex Mono';color:#9a6a14">20,470 kg</div></div>
+          <div style="background:#fff;border:1px solid #d4d1c8;border-radius:3px;padding:11px 13px;display:flex;justify-content:space-between;align-items:center"><div><div style="font:600 12px 'IBM Plex Mono';color:#1c1d19">0048210 · TRK-148</div><div style="font:500 11px 'IBM Plex Sans';color:#8a897f">HRW Wheat · 13:51</div></div><div style="font:600 13px 'IBM Plex Mono';color:#9a6a14">22,060 kg</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===================== TICKETS ===================== -->
+  <sc-if value="{{ isTickets }}">
+  <div style="padding:24px 28px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px">
+      <div><div style="font:600 22px 'IBM Plex Sans';color:#1c1d19;letter-spacing:-.01em">Ticket History</div><div style="font:500 12px 'IBM Plex Mono';color:#8a897f;margin-top:3px">24 tickets today · 312 this month</div></div>
+      <div style="display:flex;gap:10px">
+        <div style="font:600 12px 'IBM Plex Sans';color:#1c1d19;border:1px solid #cfccc2;background:#faf9f5;padding:10px 16px;border-radius:3px;cursor:pointer">⭳ Export CSV</div>
+        <div style="font:600 12px 'IBM Plex Sans';color:#1c1d19;border:1px solid #cfccc2;background:#faf9f5;padding:10px 16px;border-radius:3px;cursor:pointer">⭳ Export PDF</div>
+      </div>
+    </div>
+
+    <!-- toolbar -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <div style="flex:1;background:#faf9f5;border:1px solid #cfccc2;border-radius:3px;padding:10px 14px;font:500 13px 'IBM Plex Sans';color:#8a897f">⌕  Search ticket #, vehicle, hauler…</div>
+      <div style="display:flex;border:1px solid #cfccc2;border-radius:3px;overflow:hidden">
+        <div style="font:600 12px 'IBM Plex Sans';color:#0e0f0c;background:#e0951f;padding:10px 16px">Today</div>
+        <div style="font:600 12px 'IBM Plex Sans';color:#6f6e64;background:#faf9f5;padding:10px 16px;border-left:1px solid #cfccc2">Week</div>
+        <div style="font:600 12px 'IBM Plex Sans';color:#6f6e64;background:#faf9f5;padding:10px 16px;border-left:1px solid #cfccc2">Month</div>
+      </div>
+      <div style="font:500 13px 'IBM Plex Sans';color:#1c1d19;background:#faf9f5;border:1px solid #cfccc2;border-radius:3px;padding:10px 16px">Commodity ▾</div>
+      <div style="font:500 13px 'IBM Plex Sans';color:#1c1d19;background:#faf9f5;border:1px solid #cfccc2;border-radius:3px;padding:10px 16px">Hauler ▾</div>
+    </div>
+
+    <!-- table -->
+    <div style="background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:90px 120px 90px 1fr 140px 100px 100px 100px 90px 110px;background:#eceae3;padding:11px 16px;font:600 10px 'IBM Plex Mono';color:#8a897f;letter-spacing:.06em;border-bottom:1px solid #d4d1c8">
+        <span>TICKET</span><span>DATE/TIME</span><span>VEHICLE</span><span>HAULER</span><span>COMMODITY</span><span style="text-align:right">GROSS</span><span style="text-align:right">TARE</span><span style="text-align:right">NET</span><span style="text-align:right">STATUS</span><span style="text-align:right">ACTION</span>
+      </div>
+      <sc-for list="{{ tickets }}" as="t" hint-placeholder-count="8">
+        <div style="display:grid;grid-template-columns:90px 120px 90px 1fr 140px 100px 100px 100px 90px 110px;padding:13px 16px;font:500 12px 'IBM Plex Mono';color:#3a3b34;border-bottom:1px solid #eceae3;align-items:center">
+          <span style="font-weight:600;color:#9a6a14">{{ t.id }}</span>
+          <span style="color:#6f6e64">{{ t.time }}</span>
+          <span>{{ t.vehicle }}</span>
+          <span style="font-family:'IBM Plex Sans';color:#1c1d19">{{ t.hauler }}</span>
+          <span style="font-family:'IBM Plex Sans'">{{ t.commodity }}</span>
+          <span style="text-align:right">{{ t.gross }}</span>
+          <span style="text-align:right">{{ t.tare }}</span>
+          <span style="text-align:right;font-weight:600;color:#1c1d19">{{ t.net }}</span>
+          <span style="text-align:right">{{ t.statusEl }}</span>
+          <span style="text-align:right"><span onClick="{{ openPrint }}" style="font:600 11px 'IBM Plex Sans';color:#9a6a14;cursor:pointer">Reprint</span></span>
+        </div>
+      </sc-for>
+      <div style="display:flex;justify-content:space-between;padding:13px 16px;background:#eceae3;font:600 12px 'IBM Plex Mono';color:#1c1d19">
+        <span>NET TOTAL · 24 TICKETS</span><span>518,180 lb &nbsp;·&nbsp; 20,399 bu</span>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===================== VEHICLES ===================== -->
+  <sc-if value="{{ isVehicles }}">
+  <div style="padding:24px 28px;display:flex;gap:22px">
+    <!-- list -->
+    <div style="width:46%;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px">
+        <div><div style="font:600 22px 'IBM Plex Sans';color:#1c1d19">Vehicles &amp; Stored Tares</div><div style="font:500 12px 'IBM Plex Mono';color:#8a897f;margin-top:3px">38 registered · 4 tares need re-weigh</div></div>
+        <div style="font:700 12px 'IBM Plex Sans';color:#0e0f0c;background:#e0951f;padding:10px 16px;border-radius:3px;cursor:pointer">+ Add Vehicle</div>
+      </div>
+      <div style="background:#faf9f5;border:1px solid #cfccc2;border-radius:3px;padding:10px 14px;font:500 13px 'IBM Plex Sans';color:#8a897f;margin-bottom:12px">⌕  Search ID, plate, hauler…</div>
+      <div style="background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;overflow:hidden">
+        <sc-for list="{{ vehicles }}" as="v" hint-placeholder-count="6">
+          <div style="{{ v.rowStyle }}">
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:10px"><span style="font:700 14px 'IBM Plex Mono';color:#1c1d19">{{ v.id }}</span><span style="font:500 12px 'IBM Plex Sans';color:#6f6e64">{{ v.desc }}</span></div>
+              <div style="font:500 11px 'IBM Plex Sans';color:#8a897f;margin-top:3px">{{ v.hauler }} · last {{ v.last }}</div>
+            </div>
+            <div style="text-align:right"><div style="font:600 14px 'IBM Plex Mono';color:#1c1d19">{{ v.tare }}</div>{{ v.badgeEl }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- detail -->
+    <div style="flex:1;background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;padding:24px">
+      <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e3e0d8;padding-bottom:18px;margin-bottom:18px">
+        <div><div style="font:700 24px 'IBM Plex Mono';color:#1c1d19">TRK-148</div><div style="font:500 13px 'IBM Plex Sans';color:#6f6e64;margin-top:2px">Peterbilt 579 · Prairie Gold Co-op · Plate KS 84-217</div></div>
+        <span style="display:flex;align-items:center;gap:7px;background:#e7f0ea;border:1px solid #b8d6c4;padding:7px 13px;border-radius:3px"><span style="width:7px;height:7px;border-radius:50%;background:#2f8f57"></span><span style="font:600 12px 'IBM Plex Sans';color:#2f6e4a">Tare valid</span></span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px">
+        <div style="background:#0e0f0c;border-radius:4px;padding:18px 20px">
+          <div style="font:600 10px 'IBM Plex Mono';color:#7a5a1e;letter-spacing:.14em;margin-bottom:8px">STORED TARE</div>
+          <div style="font:700 38px/1 'IBM Plex Mono';color:#ffb000;text-shadow:0 0 14px rgba(255,176,0,.45)">14,180 <span style="font-size:14px;color:#7a5a1e">kg</span></div>
+          <div style="font:500 11px 'IBM Plex Mono';color:#7d7d72;margin-top:8px">Captured 03/12/2026 · valid 90 days</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;justify-content:center">
+          <div style="font:700 13px 'IBM Plex Sans';color:#0e0f0c;background:#e0951f;padding:13px;border-radius:3px;text-align:center;cursor:pointer">⚖  Re-weigh Tare Now</div>
+          <div style="font:600 13px 'IBM Plex Sans';color:#1c1d19;border:1px solid #cfccc2;padding:13px;border-radius:3px;text-align:center;cursor:pointer">Enter Tare Manually</div>
+        </div>
+      </div>
+      <div style="font:600 11px 'IBM Plex Mono';color:#8a897f;letter-spacing:.1em;margin-bottom:10px">RECENT WEIGHINGS</div>
+      <div style="border:1px solid #e3e0d8;border-radius:3px;overflow:hidden">
+        <sc-for list="{{ vehicleHistory }}" as="h" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:90px 1fr 110px 100px;padding:11px 14px;font:500 12px 'IBM Plex Mono';color:#3a3b34;border-bottom:1px solid #eceae3">
+            <span style="font-weight:600;color:#9a6a14">{{ h.id }}</span><span style="font-family:'IBM Plex Sans'">{{ h.commodity }}</span><span style="text-align:right;font-weight:600;color:#1c1d19">{{ h.net }}</span><span style="text-align:right;color:#8a897f">{{ h.date }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===================== PRODUCTS ===================== -->
+  <sc-if value="{{ isProducts }}">
+  <div style="padding:24px 28px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px">
+      <div><div style="font:600 22px 'IBM Plex Sans';color:#1c1d19">Commodities</div><div style="font:500 12px 'IBM Plex Mono';color:#8a897f;margin-top:3px">Master data · pricing &amp; defaults</div></div>
+      <div style="font:700 12px 'IBM Plex Sans';color:#0e0f0c;background:#e0951f;padding:10px 16px;border-radius:3px;cursor:pointer">+ Add Commodity</div>
+    </div>
+    <div style="background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 180px 160px;background:#eceae3;padding:12px 18px;font:600 10px 'IBM Plex Mono';color:#8a897f;letter-spacing:.06em;border-bottom:1px solid #d4d1c8">
+        <span>COMMODITY</span><span style="text-align:right">PRICE / TONNE</span><span style="text-align:right">LOADS TODAY</span>
+      </div>
+      <sc-for list="{{ products }}" as="p" hint-placeholder-count="5">
+        <div style="display:grid;grid-template-columns:1fr 180px 160px;padding:15px 18px;align-items:center;border-bottom:1px solid #eceae3">
+          <span style="display:flex;align-items:center;gap:12px"><span style="width:10px;height:10px;border-radius:2px;background:{{ p.color }}"></span><span style="font:600 15px 'IBM Plex Sans';color:#1c1d19">{{ p.name }}</span></span>
+          <span style="text-align:right;font:600 13px 'IBM Plex Mono';color:#2f6e4a">{{ p.price }}</span>
+          <span style="text-align:right;font:500 12px 'IBM Plex Mono';color:#8a897f">{{ p.today }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===================== REPORTS ===================== -->
+  <sc-if value="{{ isReports }}">
+  <div style="padding:24px 28px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px">
+      <div><div style="font:600 22px 'IBM Plex Sans';color:#1c1d19">Reports</div><div style="font:500 12px 'IBM Plex Mono';color:#8a897f;margin-top:3px">June 28, 2026 · inbound summary</div></div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div style="font:500 13px 'IBM Plex Sans';color:#1c1d19;background:#faf9f5;border:1px solid #cfccc2;border-radius:3px;padding:10px 16px">Today ▾</div>
+        <div style="font:600 12px 'IBM Plex Sans';color:#1c1d19;border:1px solid #cfccc2;background:#faf9f5;padding:10px 16px;border-radius:3px;cursor:pointer">⭳ CSV</div>
+        <div style="font:600 12px 'IBM Plex Sans';color:#1c1d19;border:1px solid #cfccc2;background:#faf9f5;padding:10px 16px;border-radius:3px;cursor:pointer">⭳ PDF</div>
+      </div>
+    </div>
+    <!-- stat row -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px">
+      <div style="background:#1b1c18;border-radius:4px;padding:18px 20px"><div style="font:600 10px 'IBM Plex Mono';color:#caa45a;letter-spacing:.1em;margin-bottom:8px">NET RECEIVED</div><div style="font:700 30px/1 'IBM Plex Mono';color:#ffb000">518,180<span style="font-size:13px;color:#caa45a"> kg</span></div><div style="font:500 11px 'IBM Plex Mono';color:#9a9890;margin-top:6px">518.2 tonnes</div></div>
+      <div style="background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;padding:18px 20px"><div style="font:600 10px 'IBM Plex Mono';color:#8a897f;letter-spacing:.1em;margin-bottom:8px">TICKETS</div><div style="font:700 30px/1 'IBM Plex Mono';color:#1c1d19">24</div><div style="font:500 11px 'IBM Plex Mono';color:#8a897f;margin-top:6px">22 in · 2 out</div></div>
+      <div style="background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;padding:18px 20px"><div style="font:600 10px 'IBM Plex Mono';color:#8a897f;letter-spacing:.1em;margin-bottom:8px">AVG NET / LOAD</div><div style="font:700 30px/1 'IBM Plex Mono';color:#1c1d19">21,590<span style="font-size:13px;color:#8a897f"> kg</span></div><div style="font:500 11px 'IBM Plex Mono';color:#8a897f;margin-top:6px">24 loads</div></div>
+      <div style="background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;padding:18px 20px"><div style="font:600 10px 'IBM Plex Mono';color:#8a897f;letter-spacing:.1em;margin-bottom:8px">TOP COMMODITY</div><div style="font:700 22px/1 'IBM Plex Sans';color:#1c1d19;margin-top:4px">Corn #2 Yellow</div><div style="font:500 11px 'IBM Plex Mono';color:#8a897f;margin-top:8px">58% of net volume</div></div>
+    </div>
+
+    <div style="display:flex;gap:20px">
+      <!-- bar chart -->
+      <div style="flex:1;background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;padding:22px">
+        <div style="font:600 11px 'IBM Plex Mono';color:#8a897f;letter-spacing:.1em;margin-bottom:20px">NET RECEIVED BY COMMODITY · kg</div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <sc-for list="{{ commodityBars }}" as="c" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:14px">
+              <span style="width:130px;font:500 13px 'IBM Plex Sans';color:#1c1d19">{{ c.name }}</span>
+              <div style="flex:1;height:22px;background:#eceae3;border-radius:2px;overflow:hidden"><div style="height:100%;width:{{ c.pct }};background:{{ c.color }}"></div></div>
+              <span style="width:90px;text-align:right;font:600 13px 'IBM Plex Mono';color:#1c1d19">{{ c.val }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <!-- by hauler -->
+      <div style="width:380px;background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;padding:22px">
+        <div style="font:600 11px 'IBM Plex Mono';color:#8a897f;letter-spacing:.1em;margin-bottom:16px">TOP HAULERS</div>
+        <sc-for list="{{ haulers }}" as="h" hint-placeholder-count="5">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #eceae3">
+            <div><div style="font:600 13px 'IBM Plex Sans';color:#1c1d19">{{ h.name }}</div><div style="font:500 11px 'IBM Plex Mono';color:#8a897f">{{ h.loads }} loads</div></div>
+            <div style="font:600 14px 'IBM Plex Mono';color:#9a6a14">{{ h.net }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===================== SETTINGS ===================== -->
+  <sc-if value="{{ isSettings }}">
+  <div style="padding:24px 28px;max-width:1100px">
+    <div style="margin-bottom:20px"><div style="font:600 22px 'IBM Plex Sans';color:#1c1d19">Settings</div><div style="font:500 12px 'IBM Plex Mono';color:#8a897f;margin-top:3px">Weigh indicator connection · scale · ticketing</div></div>
+
+    <div style="display:flex;gap:20px;align-items:flex-start">
+      <!-- connection -->
+      <div style="flex:1;background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;background:#1b1c18;padding:16px 22px">
+          <div><div style="font:700 14px 'IBM Plex Sans';color:#e9e7df">Weigh Indicator</div><div style="font:500 11px 'IBM Plex Mono';color:#94938a;margin-top:2px">Cardinal 225 Navigator · FW 2.14</div></div>
+          <div style="display:flex;align-items:center;gap:7px;background:#13261a;border:1px solid #1f4a30;padding:7px 13px;border-radius:3px"><span style="width:8px;height:8px;border-radius:50%;background:#37b06a;box-shadow:0 0 7px #37b06a;animation:pulseDot 2s infinite"></span><span style="font:600 12px 'IBM Plex Mono';color:#6fc792">CONNECTED</span></div>
+        </div>
+        <div style="padding:22px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px 20px">
+          <div><div style="font:600 11px 'IBM Plex Sans';color:#6f6e64;letter-spacing:.06em;margin-bottom:7px">SERIAL PORT</div><div style="background:#fff;border:1px solid #cfccc2;border-radius:3px;padding:12px 14px;font:500 14px 'IBM Plex Mono';color:#1c1d19">COM3 ▾</div></div>
+          <div><div style="font:600 11px 'IBM Plex Sans';color:#6f6e64;letter-spacing:.06em;margin-bottom:7px">BAUD RATE</div><div style="background:#fff;border:1px solid #cfccc2;border-radius:3px;padding:12px 14px;font:500 14px 'IBM Plex Mono';color:#1c1d19">9600 ▾</div></div>
+          <div><div style="font:600 11px 'IBM Plex Sans';color:#6f6e64;letter-spacing:.06em;margin-bottom:7px">PROTOCOL</div><div style="background:#fff;border:1px solid #cfccc2;border-radius:3px;padding:12px 14px;font:500 14px 'IBM Plex Mono';color:#1c1d19">Cardinal SB ▾</div></div>
+          <div><div style="font:600 11px 'IBM Plex Sans';color:#6f6e64;letter-spacing:.06em;margin-bottom:7px">DATA BITS</div><div style="background:#fff;border:1px solid #cfccc2;border-radius:3px;padding:12px 14px;font:500 14px 'IBM Plex Mono';color:#1c1d19">8 ▾</div></div>
+          <div><div style="font:600 11px 'IBM Plex Sans';color:#6f6e64;letter-spacing:.06em;margin-bottom:7px">PARITY</div><div style="background:#fff;border:1px solid #cfccc2;border-radius:3px;padding:12px 14px;font:500 14px 'IBM Plex Mono';color:#1c1d19">None ▾</div></div>
+          <div><div style="font:600 11px 'IBM Plex Sans';color:#6f6e64;letter-spacing:.06em;margin-bottom:7px">STOP BITS</div><div style="background:#fff;border:1px solid #cfccc2;border-radius:3px;padding:12px 14px;font:500 14px 'IBM Plex Mono';color:#1c1d19">1 ▾</div></div>
+        </div>
+        <!-- live read test -->
+        <div style="margin:0 22px 22px;background:#070806;border:1px solid #23241f;border-radius:4px;padding:16px 18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span style="font:600 10px 'IBM Plex Mono';color:#5b5c54;letter-spacing:.14em">LIVE STREAM TEST</span><span style="font:600 11px 'IBM Plex Sans';color:#0e0f0c;background:#37b06a;padding:5px 12px;border-radius:2px;cursor:pointer">Read Now</span></div>
+          <div style="font:400 12px/1.9 'IBM Plex Mono';color:#6f8a78">14:32:09&nbsp;&nbsp;ST,GS,+035570 kg<br>14:32:08&nbsp;&nbsp;ST,GS,+035570 kg<br><span style="color:#9a7a3a">14:32:06&nbsp;&nbsp;US,GS,+035360 kg</span></div>
+        </div>
+      </div>
+
+      <!-- scale + ticketing -->
+      <div style="width:360px;display:flex;flex-direction:column;gap:20px">
+        <div style="background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;padding:20px">
+          <div style="font:700 13px 'IBM Plex Sans';color:#1c1d19;margin-bottom:16px">Scale Configuration</div>
+          <div style="display:flex;flex-direction:column;gap:13px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:500 13px 'IBM Plex Sans';color:#6f6e64">Capacity</span><span style="font:600 13px 'IBM Plex Mono';color:#1c1d19">36,000 kg</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:500 13px 'IBM Plex Sans';color:#6f6e64">Division</span><span style="font:600 13px 'IBM Plex Mono';color:#1c1d19">10 kg</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:500 13px 'IBM Plex Sans';color:#6f6e64">Units</span><span style="font:600 13px 'IBM Plex Mono';color:#1c1d19">kg / t</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:500 13px 'IBM Plex Sans';color:#6f6e64">Last calibration</span><span style="font:600 13px 'IBM Plex Mono';color:#1c1d19">01/15/26</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:500 13px 'IBM Plex Sans';color:#6f6e64">Tare validity</span><span style="font:600 13px 'IBM Plex Mono';color:#1c1d19">90 days</span></div>
+          </div>
+        </div>
+        <div style="background:#faf9f5;border:1px solid #d4d1c8;border-radius:4px;padding:20px">
+          <div style="font:700 13px 'IBM Plex Sans';color:#1c1d19;margin-bottom:16px">Ticketing &amp; Printer</div>
+          <div style="display:flex;flex-direction:column;gap:13px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:500 13px 'IBM Plex Sans';color:#6f6e64">Next ticket #</span><span style="font:600 13px 'IBM Plex Mono';color:#1c1d19">0048213</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:500 13px 'IBM Plex Sans';color:#6f6e64">Printer</span><span style="font:600 13px 'IBM Plex Mono';color:#1c1d19">Zebra ZD421</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:500 13px 'IBM Plex Sans';color:#6f6e64">Auto-print</span><span style="font:600 11px 'IBM Plex Sans';color:#2f6e4a;background:#e7f0ea;border:1px solid #b8d6c4;padding:4px 11px;border-radius:10px">ON</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:500 13px 'IBM Plex Sans';color:#6f6e64">Copies</span><span style="font:600 13px 'IBM Plex Mono';color:#1c1d19">2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  </div>
+
+  <!-- ===================== PRINT TICKET MODAL ===================== -->
+  <sc-if value="{{ showPrint }}">
+  <div onClick="{{ closePrint }}" style="position:fixed;inset:0;background:rgba(14,15,12,.6);display:flex;align-items:center;justify-content:center;z-index:50">
+    <div style="background:#fff;width:420px;border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,.4);overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;background:#1b1c18;padding:13px 18px">
+        <span style="font:600 12px 'IBM Plex Mono';color:#e9e7df;letter-spacing:.08em">PRINT PREVIEW · 4×6 LABEL</span>
+        <span onClick="{{ closePrint }}" style="font:600 16px 'IBM Plex Sans';color:#94938a;cursor:pointer">✕</span>
+      </div>
+      <div style="padding:30px 34px;font-family:'IBM Plex Mono'">
+        <div style="text-align:center;border-bottom:2px solid #1c1d19;padding-bottom:14px;margin-bottom:14px">
+          <div style="font:700 18px 'IBM Plex Sans';color:#1c1d19;letter-spacing:.04em">PRAIRIE GOLD CO-OP</div>
+          <div style="font:500 11px 'IBM Plex Mono';color:#6f6e64;margin-top:3px">1487 COUNTY RD 12 · HAYS, KS 67601</div>
+          <div style="font:700 13px 'IBM Plex Mono';color:#1c1d19;margin-top:8px">SCALE TICKET No. 0048213</div>
+        </div>
+        <div style="font:500 12px/2.1 'IBM Plex Mono';color:#1c1d19">
+          <div style="display:flex;justify-content:space-between"><span style="color:#8a897f">DATE / TIME</span><span>06/28/2026 14:32</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#8a897f">VEHICLE</span><span>TRK-148 · Peterbilt 579</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#8a897f">HAULER</span><span>Prairie Gold Co-op</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#8a897f">COMMODITY</span><span>Corn #2 Yellow</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="color:#8a897f">CONTRACT</span><span>CN-22841</span></div>
+          <div style="border-top:1.5px dashed #cfccc2;margin:12px 0"></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#8a897f">GROSS</span><span>35,570 kg</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:#8a897f">TARE (STORED)</span><span>14,180 kg</span></div>
+          <div style="display:flex;justify-content:space-between;font-weight:700;font-size:18px;margin-top:6px;border-top:2px solid #1c1d19;padding-top:8px"><span>NET</span><span>21,390 kg</span></div>
+          <div style="display:flex;justify-content:space-between;color:#6f6e64"><span>TONNES</span><span>21.4 t</span></div>
+        </div>
+        <div style="text-align:center;margin-top:18px;font:500 10px 'IBM Plex Mono';color:#8a897f">OPERATOR J. MERCER · SCALE 1 · NTEP CC 09-068</div>
+        <div style="text-align:center;margin-top:10px;font:700 14px 'IBM Plex Mono';color:#1c1d19;letter-spacing:4px">▌▌▍▎▌▍▎▌▌▍▎▌▍▌▎▌▍▎▌▌▍</div>
+      </div>
+      <div style="display:flex;gap:10px;padding:14px 18px;border-top:1px solid #e3e0d8">
+        <div onClick="{{ closePrint }}" style="flex:1;text-align:center;font:600 13px 'IBM Plex Sans';color:#6f6e64;border:1px solid #cfccc2;padding:12px;border-radius:3px;cursor:pointer">Close</div>
+        <div style="flex:1;text-align:center;font:700 13px 'IBM Plex Sans';color:#0e0f0c;background:#e0951f;padding:12px;border-radius:3px;cursor:pointer">🖶  Print 2 Copies</div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { screen: 'weigh', showPrint: false };
+
+  go(name) { return () => this.setState({ screen: name }); }
+
+  tab(name) {
+    const active = this.state.screen === name;
+    return active
+      ? "font:600 12px 'IBM Plex Sans';color:#1b1c18;background:#e0951f;padding:7px 13px;border-radius:3px;cursor:pointer"
+      : "font:500 12px 'IBM Plex Sans';color:#b6b5ab;padding:7px 11px;border-radius:3px;cursor:pointer";
+  }
+
+  statusBadge(kind) {
+    if (kind === 'live') return React.createElement('span', { style:{ font:"600 10px 'IBM Plex Mono'", color:'#9a6a14' } }, '◷ live');
+    return React.createElement('span', { style:{ font:"600 10px 'IBM Plex Mono'", color:'#2f6e4a' } }, '✓ done');
+  }
+
+  renderVals() {
+    const s = this.state.screen;
+
+    const tickets = [
+      { id:'0048213', time:'14:32', vehicle:'TRK-148', hauler:'Prairie Gold Co-op', commodity:'Corn #2 Yellow', gross:'35,570', tare:'14,180', net:'21,390', status:'live' },
+      { id:'0048212', time:'14:18', vehicle:'TRK-203', hauler:'Heartland Farms', commodity:'Soybeans', gross:'35,490', tare:'14,180', net:'21,310', status:'done' },
+      { id:'0048211', time:'14:02', vehicle:'TRK-077', hauler:'Prairie Gold Co-op', commodity:'Corn #2 Yellow', gross:'34,010', tare:'13,540', net:'20,470', status:'done' },
+      { id:'0048210', time:'13:51', vehicle:'TRK-148', hauler:'Schmidt Grain LLC', commodity:'HRW Wheat', gross:'36,240', tare:'14,180', net:'22,060', status:'done' },
+      { id:'0048209', time:'13:37', vehicle:'TRK-512', hauler:'Heartland Farms', commodity:'Grain Sorghum', gross:'32,700', tare:'12,950', net:'19,750', status:'done' },
+      { id:'0048208', time:'13:20', vehicle:'TRK-203', hauler:'Tallgrass Ag', commodity:'Soybeans', gross:'35,170', tare:'14,180', net:'20,990', status:'done' },
+      { id:'0048207', time:'13:04', vehicle:'TRK-091', hauler:'Prairie Gold Co-op', commodity:'Corn #2 Yellow', gross:'34,620', tare:'13,670', net:'20,950', status:'done' },
+      { id:'0048206', time:'12:48', vehicle:'TRK-148', hauler:'Schmidt Grain LLC', commodity:'HRW Wheat', gross:'36,130', tare:'14,180', net:'21,950', status:'done' },
+      { id:'0048205', time:'12:31', vehicle:'TRK-440', hauler:'Tallgrass Ag', commodity:'Oats', gross:'30,940', tare:'12,660', net:'18,280', status:'done' },
+    ].map(t => ({ ...t, statusEl: this.statusBadge(t.status) }));
+
+    const vList = [
+      { id:'TRK-148', desc:'Peterbilt 579', hauler:'Prairie Gold Co-op', last:'14:32 today', tare:'14,180', valid:'ok', sel:true },
+      { id:'TRK-203', desc:'Kenworth T680', hauler:'Heartland Farms', last:'14:18 today', tare:'14,180', valid:'ok' },
+      { id:'TRK-077', desc:'Freightliner Cascadia', hauler:'Prairie Gold Co-op', last:'14:02 today', tare:'13,540', valid:'ok' },
+      { id:'TRK-512', desc:'Mack Anthem', hauler:'Heartland Farms', last:'13:37 today', tare:'12,950', valid:'stale' },
+      { id:'TRK-091', desc:'Volvo VNL', hauler:'Prairie Gold Co-op', last:'Yesterday', tare:'13,670', valid:'ok' },
+      { id:'TRK-440', desc:'International LT', hauler:'Tallgrass Ag', last:'4 days ago', tare:'12,660', valid:'stale' },
+    ];
+    const badge = (valid) => valid === 'stale'
+      ? React.createElement('div', { style:{ font:"500 10px 'IBM Plex Mono'", color:'#9a6a14', marginTop:'2px' } }, '⚠ re-weigh')
+      : React.createElement('div', { style:{ font:"500 10px 'IBM Plex Mono'", color:'#2f6e4a', marginTop:'2px' } }, '● valid');
+    const vehicles = vList.map(v => ({
+      ...v,
+      badgeEl: badge(v.valid),
+      rowStyle: "display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #eceae3;cursor:pointer;" + (v.sel ? "background:#f6ecd6;border-left:3px solid #e0951f" : "border-left:3px solid transparent"),
+    }));
+
+    const vehicleHistory = [
+      { id:'0048213', commodity:'Corn #2 Yellow', net:'21,390 kg', date:'06/28/26' },
+      { id:'0048210', commodity:'HRW Wheat', net:'22,060 kg', date:'06/28/26' },
+      { id:'0048206', commodity:'HRW Wheat', net:'21,950 kg', date:'06/28/26' },
+      { id:'0048188', commodity:'Corn #2 Yellow', net:'21,190 kg', date:'06/27/26' },
+    ];
+
+    const products = [
+      { name:'Corn #2 Yellow', price:'$165 / t', today:'12 loads', color:'#e0951f' },
+      { name:'Soybeans', price:'$420 / t', today:'5 loads', color:'#6b8f3a' },
+      { name:'HRW Wheat', price:'$219 / t', today:'4 loads', color:'#b8862e' },
+      { name:'Grain Sorghum (Milo)', price:'$151 / t', today:'2 loads', color:'#a6452e' },
+      { name:'Oats', price:'$213 / t', today:'1 load', color:'#c9a24a' },
+    ];
+
+    const commodityBars = [
+      { name:'Corn #2 Yellow', pct:'100%', val:'300,470', color:'#e0951f' },
+      { name:'HRW Wheat', pct:'44%', val:'132,010', color:'#b8862e' },
+      { name:'Soybeans', pct:'28%', val:'84,740', color:'#6b8f3a' },
+      { name:'Grain Sorghum', pct:'13%', val:'39,520', color:'#a6452e' },
+      { name:'Oats', pct:'6%', val:'18,280', color:'#c9a24a' },
+    ];
+
+    const haulers = [
+      { name:'Prairie Gold Co-op', loads:9, net:'191,260 kg' },
+      { name:'Heartland Farms', loads:6, net:'125,360 kg' },
+      { name:'Schmidt Grain LLC', loads:4, net:'88,010 kg' },
+      { name:'Tallgrass Ag', loads:3, net:'63,630 kg' },
+      { name:'Independent', loads:2, net:'49,940 kg' },
+    ];
+
+    return {
+      isWeigh: s==='weigh', isTickets: s==='tickets', isVehicles: s==='vehicles',
+      isProducts: s==='products', isReports: s==='reports', isSettings: s==='settings',
+      goWeigh: this.go('weigh'), goTickets: this.go('tickets'), goVehicles: this.go('vehicles'),
+      goProducts: this.go('products'), goReports: this.go('reports'), goSettings: this.go('settings'),
+      tabWeigh: this.tab('weigh'), tabTickets: this.tab('tickets'), tabVehicles: this.tab('vehicles'),
+      tabProducts: this.tab('products'), tabReports: this.tab('reports'), tabSettings: this.tab('settings'),
+      openPrint: () => this.setState({ showPrint: true }),
+      closePrint: () => this.setState({ showPrint: false }),
+      showPrint: this.state.showPrint,
+      tickets, vehicles, vehicleHistory, products, commodityBars, haulers,
+    };
+  }
+}
+</script>
+</body>
+</html>
