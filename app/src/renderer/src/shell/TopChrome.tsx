@@ -5,6 +5,7 @@ import { cx } from '../lib/cx'
 import { formatDateTime } from '@shared/format'
 import { useDataChanged } from '../hooks/useDataChanged'
 import type { AuthUser, Settings } from '@shared/types'
+import appIcon from '../assets/icon.png'
 import styles from './TopChrome.module.css'
 
 export type AppScreen = 'weigh' | 'tickets' | 'vehicles' | 'products' | 'reports' | 'settings'
@@ -53,9 +54,7 @@ export function TopChrome({ screen, onNavigate, currentUser, onLogout }: TopChro
   return (
     <header className={styles.chrome}>
       <div className={styles.left}>
-        <div className={styles.logo}>
-          <div className={styles.logoDot} />
-        </div>
+        <img className={styles.logo} src={appIcon} alt="" />
         <div className={styles.wordmark}>ATLAS WEIGH NAVIGATOR</div>
         {settings && <div className={styles.scaleLabel}>{settings.scaleLabel}</div>}
       </div>

@@ -17,20 +17,11 @@
 }
 
 .logo {
-  width: 24px;
-  height: 24px;
-  border: 2px solid var(--color-accent);
+  width: 28px;
+  height: 28px;
   border-radius: var(--radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
-}
-
-.logoDot {
-  width: 9px;
-  height: 9px;
-  background: var(--color-accent);
+  object-fit: cover;
 }
 
 .wordmark {

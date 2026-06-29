@@ -3,6 +3,7 @@ import { Button } from '../components/Button'
 import { FieldLabel } from '../components/FieldLabel'
 import { TextField } from '../components/TextField'
 import type { AuthUser } from '@shared/types'
+import appIcon from '../assets/icon.png'
 import styles from './LoginScreen.module.css'
 
 export interface LoginScreenProps {
@@ -33,9 +34,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
     <div className={styles.screen}>
       <div className={styles.card}>
         <div className={styles.header}>
-          <div className={styles.logo}>
-            <div className={styles.logoDot} />
-          </div>
+          <img className={styles.logo} src={appIcon} alt="" />
           <div className={styles.wordmark}>ATLAS WEIGH NAVIGATOR</div>
           <div className={styles.subtitle}>WEIGHBRIDGE TERMINAL</div>
         </div>
