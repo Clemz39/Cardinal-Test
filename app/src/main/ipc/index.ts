@@ -87,7 +87,16 @@ export function registerIpcHandlers(): void {
     const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
     return canceled ? null : filePaths[0]
   })
-  ipcMain.handle('backup:restore', (_e, filePath: string) => restoreBackup(filePath))
+  ipcMain.handle('backup:restore', async (_e, filePath: string) => {
+    const result = await restoreBackup(filePath)
+    if (result.ok) {
+      // Give the renderer a moment to receive this response before its window reloads out from under it
+      setTimeout(() => {
+        for (const win of BrowserWindow.getAllWindows()) win.webContents.reload()
+      }, 400)
+    }
+    return result
+  })
   ipcMain.handle('backup:browseRestoreFile', async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ['openFile'],

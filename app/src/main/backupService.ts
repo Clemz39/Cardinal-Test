@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, readdirSync, unlinkSync, copyFileSync } from 'fs'
 import { join } from 'path'
-import { app } from 'electron'
 import { getDb, getDbPath, closeDb } from './db'
 import { getSettings, updateSettings } from './repos/settingsRepo'
+import { logout } from './authSession'
 
 const MAX_BACKUPS = 10
 const BACKUP_PREFIX = 'atlasweigh-backup-'
@@ -45,11 +45,8 @@ export async function restoreBackup(
       const sidecar = dbPath + ext
       if (existsSync(sidecar)) unlinkSync(sidecar)
     }
-    // Relaunch so every screen, the auth session, and the db handle start fresh against the restored data
-    setTimeout(() => {
-      app.relaunch()
-      app.exit(0)
-    }, 300)
+    getDb() // reopen against the restored file; throws here if it isn't a valid database
+    logout()
     return { ok: true }
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : String(err) }
