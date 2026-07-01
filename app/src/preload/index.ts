@@ -58,6 +58,10 @@ const api: AtlasApi = {
     getReading: () => ipcRenderer.invoke('scale:getReading'),
     recentLines: (limit) => ipcRenderer.invoke('scale:recentLines', limit)
   },
+  backup: {
+    now: () => ipcRenderer.invoke('backup:now'),
+    browse: () => ipcRenderer.invoke('backup:browse')
+  },
   onScaleReading: (callback) => {
     const listener = (_event: IpcRendererEvent, reading: ScaleReading): void => callback(reading)
     ipcRenderer.on('scale:reading', listener)

@@ -185,7 +185,10 @@ export function buildSeed(now: Date = new Date()): SeedData {
     nextTicketNumber: 48213,
     printerName: 'Zebra ZD421',
     autoPrint: true,
-    copies: 2
+    copies: 2,
+    backupPath: '',
+    backupIntervalHours: 24,
+    lastBackupAt: null
   }
 
   const users: (AuthUser & { pin: string })[] = [

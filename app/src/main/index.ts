@@ -3,6 +3,7 @@ import { join } from 'path'
 import { getDb } from './db'
 import { scaleSimulator } from './scaleSimulator'
 import { registerIpcHandlers } from './ipc'
+import { startBackupScheduler, stopBackupScheduler } from './backupService'
 import { loadAppRoute, PRELOAD_PATH } from './windowUrl'
 
 const ICON_PATH = join(__dirname, '../../build/icon.png')
@@ -38,6 +39,7 @@ app.whenReady().then(() => {
   getDb()
   scaleSimulator.start()
   registerIpcHandlers()
+  startBackupScheduler()
   createMainWindow()
 
   app.on('activate', () => {
@@ -46,5 +48,6 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
+  stopBackupScheduler()
   if (process.platform !== 'darwin') app.quit()
 })
