@@ -60,7 +60,9 @@ const api: AtlasApi = {
   },
   backup: {
     now: () => ipcRenderer.invoke('backup:now'),
-    browse: () => ipcRenderer.invoke('backup:browse')
+    browse: () => ipcRenderer.invoke('backup:browse'),
+    restore: (filePath) => ipcRenderer.invoke('backup:restore', filePath),
+    browseRestoreFile: () => ipcRenderer.invoke('backup:browseRestoreFile')
   },
   onScaleReading: (callback) => {
     const listener = (_event: IpcRendererEvent, reading: ScaleReading): void => callback(reading)

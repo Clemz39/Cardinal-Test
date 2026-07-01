@@ -5,6 +5,7 @@ import { join } from 'path'
 import { buildSeed } from './seed'
 
 let db: Database.Database | null = null
+let dbPath: string | null = null
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS settings (
@@ -159,7 +160,7 @@ export function getDb(): Database.Database {
 
   const userDataPath = app.getPath('userData')
   if (!existsSync(userDataPath)) mkdirSync(userDataPath, { recursive: true })
-  const dbPath = join(userDataPath, 'atlasweigh.sqlite3')
+  dbPath = join(userDataPath, 'atlasweigh.sqlite3')
 
   db = new Database(dbPath)
   db.pragma('journal_mode = WAL')
@@ -171,4 +172,16 @@ export function getDb(): Database.Database {
   seedUsersIfEmpty(db, seed.users)
 
   return db
+}
+
+export function getDbPath(): string {
+  if (!dbPath) getDb()
+  return dbPath as string
+}
+
+export function closeDb(): void {
+  if (db) {
+    db.close()
+    db = null
+  }
 }

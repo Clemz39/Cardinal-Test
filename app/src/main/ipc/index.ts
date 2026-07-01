@@ -25,7 +25,7 @@ import {
 import { startReweigh, cancelReweigh, confirmReweigh, setManualTare } from '../vehicleService'
 import { listProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../repos/productRepo'
 import { getSettings, updateSettings } from '../repos/settingsRepo'
-import { performBackup } from '../backupService'
+import { performBackup, restoreBackup } from '../backupService'
 import { getReportSummary } from '../reportService'
 import { exportTicketsCsv, exportReportPdf, printTicket } from '../printing'
 import type { DataEntity, Product, ReportRange, ScaleReading, Settings, TicketFilter, Vehicle } from '../../shared/types'
@@ -85,6 +85,15 @@ export function registerIpcHandlers(): void {
   ipcMain.handle('backup:now', () => performBackup())
   ipcMain.handle('backup:browse', async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
+    return canceled ? null : filePaths[0]
+  })
+  ipcMain.handle('backup:restore', (_e, filePath: string) => restoreBackup(filePath))
+  ipcMain.handle('backup:browseRestoreFile', async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      defaultPath: getSettings().backupPath || undefined,
+      filters: [{ name: 'Atlas Weigh Backup', extensions: ['sqlite3'] }]
+    })
     return canceled ? null : filePaths[0]
   })
 
