@@ -59,9 +59,10 @@ export function SettingsScreen() {
     if (settings?.dataSource !== 'serial') return
     const refresh = (): void => {
       window.api.scale.listPorts().then(setDetectedPorts)
+      window.api.scale.getStatus().then(setScaleStatus)
     }
     refresh()
-    const timer = setInterval(refresh, 4000)
+    const timer = setInterval(refresh, 2000)
     return () => clearInterval(timer)
   }, [settings?.dataSource])
 

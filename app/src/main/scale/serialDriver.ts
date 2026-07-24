@@ -40,6 +40,8 @@ export class SerialScaleDriver extends EventEmitter implements ScaleDriver {
   private reconnectTimer: NodeJS.Timeout | null = null
   private stopped = true
   private connecting = false
+  private rawBytesReceived = 0
+  private linesReceived = 0
 
   constructor(config: SerialDriverConfig) {
     super()
@@ -72,7 +74,11 @@ export class SerialScaleDriver extends EventEmitter implements ScaleDriver {
   }
 
   getStatus(): ScaleStatusInfo {
-    return this.status
+    if (this.status.status !== 'connected') return this.status
+    return {
+      status: 'connected',
+      detail: `${this.config.path} — ${this.rawBytesReceived} bytes, ${this.linesReceived} line${this.linesReceived === 1 ? '' : 's'} received`
+    }
   }
 
   private setStatus(status: ScaleStatusInfo): void {
@@ -83,11 +89,13 @@ export class SerialScaleDriver extends EventEmitter implements ScaleDriver {
   private async connect(): Promise<void> {
     if (this.stopped || this.connecting) return
     this.connecting = true
+    this.rawBytesReceived = 0
+    this.linesReceived = 0
     this.setStatus({ status: 'connecting', detail: this.config.path })
 
     try {
       const { SerialPort } = await import('serialport')
-      const { ReadlineParser } = await import('@serialport/parser-readline')
+      const { RegexParser } = await import('@serialport/parser-regex')
 
       const port = new SerialPort({
         path: this.config.path,
@@ -122,8 +130,13 @@ export class SerialScaleDriver extends EventEmitter implements ScaleDriver {
         this.setStatus({ status: 'connected', detail: this.config.path })
       })
 
-      const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }))
+      // Line endings vary a lot by indicator/firmware (CRLF, bare CR, bare LF) — match any of them
+      // rather than assuming one, so a wrong guess here doesn't silently swallow every line.
+      const parser = port.pipe(new RegexParser({ regex: /\r\n|\r|\n/ }))
       parser.on('data', (line: string) => this.handleLine(line))
+      port.on('data', (chunk: Buffer) => {
+        this.rawBytesReceived += chunk.length
+      })
 
       this.port = port
     } catch (err) {
@@ -142,6 +155,7 @@ export class SerialScaleDriver extends EventEmitter implements ScaleDriver {
   }
 
   private handleLine(raw: string): void {
+    this.linesReceived += 1
     this.lastLines.unshift(raw)
     if (this.lastLines.length > MAX_LINES) this.lastLines.pop()
 
@@ -153,6 +167,10 @@ export class SerialScaleDriver extends EventEmitter implements ScaleDriver {
 
   getReading(): ScaleReading {
     return this.lastReading
+  }
+
+  getDiagnostics(): { rawBytesReceived: number; linesReceived: number } {
+    return { rawBytesReceived: this.rawBytesReceived, linesReceived: this.linesReceived }
   }
 
   getRecentLines(limit = 12): string[] {
