@@ -21,14 +21,12 @@ export interface PrintTicketLayoutProps {
 export function PrintTicketLayout({ ticket, settings }: PrintTicketLayoutProps) {
   return (
     <div className={styles.layout}>
+      {settings.companyLogo && <img className={styles.watermark} src={settings.companyLogo} alt="" />}
       <div className={styles.header}>
-        {settings.companyLogo && <img className={styles.logo} src={settings.companyLogo} alt="" />}
-        <div className={styles.headerText}>
-          <div className={styles.facility}>{settings.facilityName.toUpperCase()}</div>
-          <div className={styles.address}>{settings.facilityAddress}</div>
-          {settings.companyDetails && <div className={styles.details}>{settings.companyDetails}</div>}
-          <div className={styles.ticketNo}>SCALE TICKET No. {ticket.id}</div>
-        </div>
+        <div className={styles.facility}>{settings.facilityName.toUpperCase()}</div>
+        <div className={styles.address}>{settings.facilityAddress}</div>
+        {settings.companyDetails && <div className={styles.details}>{settings.companyDetails}</div>}
+        <div className={styles.ticketNo}>SCALE TICKET No. {ticket.id}</div>
       </div>
       <div className={styles.fields}>
         <div className={styles.row}>

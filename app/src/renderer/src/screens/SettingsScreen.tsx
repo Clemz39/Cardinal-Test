@@ -403,7 +403,7 @@ export function SettingsScreen() {
                 />
               </div>
               <div>
-                <FieldLabel>LOGO — TOP LEFT OF TICKET</FieldLabel>
+                <FieldLabel>LOGO — WATERMARK ON TICKET</FieldLabel>
                 <div className={styles.logoRow}>
                   {settings.companyLogo ? (
                     <img className={styles.logoPreview} src={settings.companyLogo} alt="" />

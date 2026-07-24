@@ -1,28 +1,27 @@
 .layout {
+  position: relative;
   padding: 30px 34px;
   font-family: var(--font-mono);
   background: var(--color-card-white);
 }
 
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68%;
+  max-width: 260px;
+  object-fit: contain;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
 .header {
-  display: grid;
-  grid-template-columns: 64px 1fr 64px;
-  align-items: start;
-  gap: 12px;
+  text-align: center;
   border-bottom: 2px solid var(--color-text);
   padding-bottom: 14px;
   margin-bottom: 14px;
-}
-
-.logo {
-  width: 64px;
-  height: 64px;
-  object-fit: contain;
-}
-
-.headerText {
-  grid-column: 2;
-  text-align: center;
 }
 
 .facility {
