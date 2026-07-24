@@ -143,6 +143,18 @@ export function VehiclesScreen() {
     setMode('idle')
   }
 
+  const handleDelete = async (): Promise<void> => {
+    if (!selected) return
+    const confirmed = window.confirm(
+      `Remove ${selected.id} (${selected.description})?\n\nPast tickets keep their own record of this vehicle, but it will no longer be selectable for new weighings. This cannot be undone.`
+    )
+    if (!confirmed) return
+    await window.api.vehicles.delete(selected.id)
+    setSelectedId(null)
+    setMode('idle')
+    setActionError(null)
+  }
+
   return (
     <div className={styles.screen}>
       <div className={styles.listCol}>
@@ -208,7 +220,12 @@ export function VehiclesScreen() {
                   {selected.description} · {selected.hauler} · Plate {selected.plate}
                 </div>
               </div>
-              <ValidPill validity={selected.tareValidity} />
+              <div className={styles.detailHeaderRight}>
+                <ValidPill validity={selected.tareValidity} />
+                <button type="button" className={styles.deleteLink} onClick={handleDelete}>
+                  Delete Vehicle
+                </button>
+              </div>
             </div>
 
             {mode === 'reweighing' ? (
