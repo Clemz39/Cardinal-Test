@@ -52,10 +52,10 @@ export function createTicket(ticket: Ticket): Ticket {
     .prepare(
       `INSERT INTO tickets (
         id, createdAt, capturedAt, vehicleId, vehicleDesc, hauler, commodity,
-        contractPo, originBin, gross, tare, net, tareSource, status, direction
+        invoiceNumber, originBin, gross, tare, net, unitPrice, tareSource, status, direction
       ) VALUES (
         @id, @createdAt, @capturedAt, @vehicleId, @vehicleDesc, @hauler, @commodity,
-        @contractPo, @originBin, @gross, @tare, @net, @tareSource, @status, @direction
+        @invoiceNumber, @originBin, @gross, @tare, @net, @unitPrice, @tareSource, @status, @direction
       )`
     )
     .run(ticket)
@@ -70,8 +70,8 @@ export function updateTicket(id: string, patch: Partial<Omit<Ticket, 'id'>>): Ti
     .prepare(
       `UPDATE tickets SET
         createdAt=@createdAt, capturedAt=@capturedAt, vehicleId=@vehicleId, vehicleDesc=@vehicleDesc,
-        hauler=@hauler, commodity=@commodity, contractPo=@contractPo, originBin=@originBin,
-        gross=@gross, tare=@tare, net=@net, tareSource=@tareSource, status=@status, direction=@direction
+        hauler=@hauler, commodity=@commodity, invoiceNumber=@invoiceNumber, originBin=@originBin,
+        gross=@gross, tare=@tare, net=@net, unitPrice=@unitPrice, tareSource=@tareSource, status=@status, direction=@direction
       WHERE id=@id`
     )
     .run(next)

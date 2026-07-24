@@ -17,11 +17,13 @@ function ticketsToCsv(tickets: Ticket[]): string {
     'Vehicle',
     'Hauler',
     'Commodity',
-    'Contract/PO',
+    'Invoice',
     'Origin Bin',
     'Gross (kg)',
     'Tare (kg)',
     'Net (kg)',
+    'Unit Price ($/kg)',
+    'Value ($)',
     'Status',
     'Direction'
   ]
@@ -31,11 +33,13 @@ function ticketsToCsv(tickets: Ticket[]): string {
     t.vehicleId ?? '',
     t.hauler ?? '',
     t.commodity ?? '',
-    t.contractPo ?? '',
+    t.invoiceNumber ?? '',
     t.originBin ?? '',
     t.gross?.toString() ?? '',
     t.tare?.toString() ?? '',
     t.net?.toString() ?? '',
+    t.unitPrice?.toString() ?? '',
+    t.net != null && t.unitPrice != null ? (t.net * t.unitPrice).toFixed(2) : '',
     t.status,
     t.direction
   ])

@@ -1,12 +1,18 @@
 import { scaleSimulator } from './scaleSimulator'
 import { createTicket, getOpenTicket, updateTicket } from './repos/ticketRepo'
 import { getVehicle } from './repos/vehicleRepo'
-import { advanceTicketCounterPast, peekNextTicketNumber } from './repos/settingsRepo'
-import { formatTicketNumber } from '../shared/format'
+import { getProductByName } from './repos/productRepo'
+import {
+  advanceTicketCounterPast,
+  peekNextTicketNumber,
+  advanceInvoiceCounter,
+  peekNextInvoiceNumber
+} from './repos/settingsRepo'
+import { formatTicketNumber, formatInvoiceNumber } from '../shared/format'
 import { notify } from './events'
 import type { Ticket } from '../shared/types'
 
-function blankDraft(ticketNumber: number): Ticket {
+function blankDraft(ticketNumber: number, invoiceNumber: number): Ticket {
   const now = new Date().toISOString()
   return {
     id: formatTicketNumber(ticketNumber),
@@ -16,11 +22,12 @@ function blankDraft(ticketNumber: number): Ticket {
     vehicleDesc: null,
     hauler: null,
     commodity: null,
-    contractPo: null,
+    invoiceNumber: formatInvoiceNumber(invoiceNumber),
     originBin: null,
     gross: null,
     tare: null,
     net: null,
+    unitPrice: null,
     tareSource: 'none',
     status: 'live',
     direction: 'inbound'
@@ -30,7 +37,7 @@ function blankDraft(ticketNumber: number): Ticket {
 export function ensureOpenTicket(): Ticket {
   const existing = getOpenTicket()
   if (existing) return existing
-  const draft = blankDraft(peekNextTicketNumber())
+  const draft = blankDraft(peekNextTicketNumber(), peekNextInvoiceNumber())
   return createTicket(draft)
 }
 
@@ -46,11 +53,12 @@ export function newDraft(): Ticket {
     vehicleDesc: null,
     hauler: null,
     commodity: null,
-    contractPo: null,
+    invoiceNumber: formatInvoiceNumber(peekNextInvoiceNumber()),
     originBin: null,
     gross: null,
     tare: null,
     net: null,
+    unitPrice: null,
     tareSource: 'none',
     capturedAt: null,
     createdAt: new Date().toISOString()
@@ -85,11 +93,16 @@ export function setDraftVehicle(vehicleId: string | null): Ticket {
   return updated
 }
 
-export type DraftField = 'hauler' | 'commodity' | 'contractPo' | 'originBin'
+export type DraftField = 'hauler' | 'commodity' | 'invoiceNumber' | 'originBin'
 
 export function setDraftField(field: DraftField, value: string): Ticket {
   const draft = ensureOpenTicket()
-  const updated = updateTicket(draft.id, { [field]: value })
+  const patch: Partial<Ticket> = { [field]: value }
+  if (field === 'commodity') {
+    const product = value ? getProductByName(value) : null
+    patch.unitPrice = product ? product.pricePerKg : null
+  }
+  const updated = updateTicket(draft.id, patch)
   notify('draft')
   return updated
 }
@@ -134,8 +147,9 @@ export function saveDraft(): { ok: boolean; reason?: string; saved?: Ticket; nex
 
   const saved = updateTicket(draft.id, { status: 'done' })
   advanceTicketCounterPast(parseInt(draft.id, 10))
+  advanceInvoiceCounter()
   scaleSimulator.settleToZero()
-  const nextDraft = createTicket(blankDraft(peekNextTicketNumber()))
+  const nextDraft = createTicket(blankDraft(peekNextTicketNumber(), peekNextInvoiceNumber()))
   notify('tickets', 'draft')
   return { ok: true, saved, nextDraft }
 }

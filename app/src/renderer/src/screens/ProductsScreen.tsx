@@ -4,12 +4,13 @@ import { FieldLabel } from '../components/FieldLabel'
 import { TextField } from '../components/TextField'
 import { useDataChanged } from '../hooks/useDataChanged'
 import { cx } from '../lib/cx'
+import { formatPricePerKg } from '@shared/format'
 import type { Product, ProductWithStats } from '@shared/types'
 import styles from './ProductsScreen.module.css'
 
 const SWATCHES = ['#f0a83c', '#6b8f3a', '#3a78e0', '#a6452e', '#c9a24a', '#4a7a8c', '#8a6bb0']
 
-const EMPTY_FORM = { name: '', color: SWATCHES[0], pricePerTonne: '' }
+const EMPTY_FORM = { name: '', color: SWATCHES[0], pricePerKg: '' }
 type ProductFormState = typeof EMPTY_FORM
 
 function slugify(name: string): string {
@@ -50,12 +51,12 @@ export function ProductsScreen() {
 
   const submitAdd = async (): Promise<void> => {
     const name = addForm.name.trim()
-    const price = Number(addForm.pricePerTonne)
+    const price = Number(addForm.pricePerKg)
     if (!name || !Number.isFinite(price) || price <= 0) {
       setActionError('Name and a valid price are required')
       return
     }
-    const input: Product = { id: uniqueId(name, products), name, color: addForm.color, pricePerTonne: price }
+    const input: Product = { id: uniqueId(name, products), name, color: addForm.color, pricePerKg: price }
     await window.api.products.create(input)
     setMode('idle')
     setActionError(null)
@@ -68,7 +69,7 @@ export function ProductsScreen() {
       return
     }
     setSelectedId(p.id)
-    setEditForm({ name: p.name, color: p.color, pricePerTonne: String(Math.round(p.pricePerTonne)) })
+    setEditForm({ name: p.name, color: p.color, pricePerKg: String(p.pricePerKg) })
     setActionError(null)
     setMode('editing')
   }
@@ -76,12 +77,12 @@ export function ProductsScreen() {
   const submitEdit = async (): Promise<void> => {
     if (!selectedId) return
     const name = editForm.name.trim()
-    const price = Number(editForm.pricePerTonne)
+    const price = Number(editForm.pricePerKg)
     if (!name || !Number.isFinite(price) || price <= 0) {
       setActionError('Name and a valid price are required')
       return
     }
-    await window.api.products.update(selectedId, { name, color: editForm.color, pricePerTonne: price })
+    await window.api.products.update(selectedId, { name, color: editForm.color, pricePerKg: price })
     setActionError(null)
     setMode('idle')
     setSelectedId(null)
@@ -109,7 +110,7 @@ export function ProductsScreen() {
       <div className={styles.tableWrap}>
         <div className={styles.tableHead}>
           <span>COMMODITY</span>
-          <span className={styles.right}>PRICE / TONNE</span>
+          <span className={styles.right}>PRICE / KG</span>
           <span className={styles.right}>LOADS TODAY</span>
         </div>
 
@@ -129,7 +130,7 @@ export function ProductsScreen() {
                 <span className={styles.swatch} style={{ background: p.color }} />
                 <span className={styles.nameText}>{p.name}</span>
               </span>
-              <span className={cx(styles.right, styles.priceCell)}>${Math.round(p.pricePerTonne)} / t</span>
+              <span className={cx(styles.right, styles.priceCell)}>{formatPricePerKg(p.pricePerKg)}</span>
               <span className={cx(styles.right, styles.todayCell)}>
                 {p.loadsToday} load{p.loadsToday === 1 ? '' : 's'}
               </span>
@@ -184,13 +185,14 @@ function AddProductForm({ form, onChange, onSave, onCancel }: ProductFormProps) 
           />
         </div>
         <div>
-          <FieldLabel>PRICE / TONNE</FieldLabel>
+          <FieldLabel>PRICE / KG</FieldLabel>
           <TextField
             mono
             type="number"
-            value={form.pricePerTonne}
-            placeholder="165"
-            onChange={(e) => onChange({ ...form, pricePerTonne: e.target.value })}
+            step="0.001"
+            value={form.pricePerKg}
+            placeholder="0.165"
+            onChange={(e) => onChange({ ...form, pricePerKg: e.target.value })}
           />
         </div>
         <div>
@@ -219,12 +221,13 @@ function EditProductForm({ form, onChange, onSave, onCancel }: ProductFormProps)
           <TextField value={form.name} onChange={(e) => onChange({ ...form, name: e.target.value })} />
         </div>
         <div>
-          <FieldLabel>PRICE / TONNE</FieldLabel>
+          <FieldLabel>PRICE / KG</FieldLabel>
           <TextField
             mono
             type="number"
-            value={form.pricePerTonne}
-            onChange={(e) => onChange({ ...form, pricePerTonne: e.target.value })}
+            step="0.001"
+            value={form.pricePerKg}
+            onChange={(e) => onChange({ ...form, pricePerKg: e.target.value })}
           />
         </div>
         <div>

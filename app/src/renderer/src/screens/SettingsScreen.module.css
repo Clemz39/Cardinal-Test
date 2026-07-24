@@ -311,3 +311,60 @@
   color: #e05555;
   max-width: 160px;
 }
+
+/* company branding card */
+
+.brandingTextarea {
+  width: 100%;
+  resize: vertical;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 13px 15px;
+  font: 500 13px var(--font-sans);
+  color: var(--color-text);
+  outline: none;
+}
+
+.brandingTextarea:focus {
+  border-color: var(--color-accent-strong);
+}
+
+.brandingTextarea::placeholder {
+  color: var(--color-text-faint);
+}
+
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logoPreview {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-card-white);
+  flex-shrink: 0;
+}
+
+.logoPlaceholder {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  font: 500 9px var(--font-mono);
+  color: var(--color-text-faint);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.logoButtons {
+  display: flex;
+  gap: 8px;
+}

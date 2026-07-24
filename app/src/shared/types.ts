@@ -10,11 +10,12 @@ export interface Ticket {
   vehicleDesc: string | null
   hauler: string | null
   commodity: string | null
-  contractPo: string | null
+  invoiceNumber: string | null
   originBin: string | null
   gross: number | null // kg
   tare: number | null // kg
   net: number | null // kg
+  unitPrice: number | null // price per kg, snapshotted when commodity is selected
   tareSource: TareSource
   status: TicketStatus
   direction: 'inbound' | 'outbound'
@@ -38,7 +39,7 @@ export interface Product {
   id: string
   name: string
   color: string
-  pricePerTonne: number
+  pricePerKg: number
 }
 
 export interface ProductWithStats extends Product {
@@ -66,9 +67,13 @@ export interface Settings {
   tareValidityDays: number
   // ticketing & printer
   nextTicketNumber: number
+  nextInvoiceNumber: number
   printerName: string
   autoPrint: boolean
   copies: number
+  // company branding (printed on tickets)
+  companyDetails: string
+  companyLogo: string | null // data URL
   // backup
   backupPath: string
   backupIntervalHours: number

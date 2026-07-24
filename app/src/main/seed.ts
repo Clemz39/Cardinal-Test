@@ -21,11 +21,11 @@ export function buildSeed(now: Date = new Date()): SeedData {
   const rng = createRng(225)
 
   const products: Product[] = [
-    { id: 'corn-2y', name: 'Corn #2 Yellow', color: '#e0951f', pricePerTonne: 165 },
-    { id: 'soybeans', name: 'Soybeans', color: '#6b8f3a', pricePerTonne: 420 },
-    { id: 'hrw-wheat', name: 'HRW Wheat', color: '#b8862e', pricePerTonne: 219 },
-    { id: 'sorghum', name: 'Grain Sorghum (Milo)', color: '#a6452e', pricePerTonne: 151 },
-    { id: 'oats', name: 'Oats', color: '#c9a24a', pricePerTonne: 213 }
+    { id: 'corn-2y', name: 'Corn #2 Yellow', color: '#e0951f', pricePerKg: 0.165 },
+    { id: 'soybeans', name: 'Soybeans', color: '#6b8f3a', pricePerKg: 0.42 },
+    { id: 'hrw-wheat', name: 'HRW Wheat', color: '#b8862e', pricePerKg: 0.219 },
+    { id: 'sorghum', name: 'Grain Sorghum (Milo)', color: '#a6452e', pricePerKg: 0.151 },
+    { id: 'oats', name: 'Oats', color: '#c9a24a', pricePerKg: 0.213 }
   ]
 
   const vehicles: Vehicle[] = [
@@ -82,24 +82,27 @@ export function buildSeed(now: Date = new Date()): SeedData {
   const haulers = ['Prairie Gold Co-op', 'Heartland Farms', 'Schmidt Grain LLC', 'Tallgrass Ag', 'Independent']
 
   // The 9 tickets exactly as captured in the original design mock, anchored to "today".
-  type MockTodaySeed = Omit<Ticket, 'createdAt' | 'capturedAt' | 'direction'> & { time: [number, number] }
+  type MockTodaySeed = Omit<Ticket, 'createdAt' | 'capturedAt' | 'direction' | 'unitPrice'> & { time: [number, number] }
   const mockToday: MockTodaySeed[] = [
-    { id: '0048213', time: [14, 32], vehicleId: 'TRK-148', vehicleDesc: 'Peterbilt 579', hauler: 'Prairie Gold Co-op', commodity: 'Corn #2 Yellow', contractPo: 'CN-22841', originBin: 'Field 7 · Bin 3', gross: 35570, tare: 14180, net: 21390, tareSource: 'stored', status: 'live' },
-    { id: '0048212', time: [14, 18], vehicleId: 'TRK-203', vehicleDesc: 'Kenworth T680', hauler: 'Heartland Farms', commodity: 'Soybeans', contractPo: null, originBin: null, gross: 35490, tare: 14180, net: 21310, tareSource: 'stored', status: 'done' },
-    { id: '0048211', time: [14, 2], vehicleId: 'TRK-077', vehicleDesc: 'Freightliner Cascadia', hauler: 'Prairie Gold Co-op', commodity: 'Corn #2 Yellow', contractPo: null, originBin: null, gross: 34010, tare: 13540, net: 20470, tareSource: 'stored', status: 'done' },
-    { id: '0048210', time: [13, 51], vehicleId: 'TRK-148', vehicleDesc: 'Peterbilt 579', hauler: 'Schmidt Grain LLC', commodity: 'HRW Wheat', contractPo: null, originBin: null, gross: 36240, tare: 14180, net: 22060, tareSource: 'stored', status: 'done' },
-    { id: '0048209', time: [13, 37], vehicleId: 'TRK-512', vehicleDesc: 'Mack Anthem', hauler: 'Heartland Farms', commodity: 'Grain Sorghum (Milo)', contractPo: null, originBin: null, gross: 32700, tare: 12950, net: 19750, tareSource: 'stored', status: 'done' },
-    { id: '0048208', time: [13, 20], vehicleId: 'TRK-203', vehicleDesc: 'Kenworth T680', hauler: 'Tallgrass Ag', commodity: 'Soybeans', contractPo: null, originBin: null, gross: 35170, tare: 14180, net: 20990, tareSource: 'stored', status: 'done' },
-    { id: '0048207', time: [13, 4], vehicleId: 'TRK-091', vehicleDesc: 'Volvo VNL', hauler: 'Prairie Gold Co-op', commodity: 'Corn #2 Yellow', contractPo: null, originBin: null, gross: 34620, tare: 13670, net: 20950, tareSource: 'stored', status: 'done' },
-    { id: '0048206', time: [12, 48], vehicleId: 'TRK-148', vehicleDesc: 'Peterbilt 579', hauler: 'Schmidt Grain LLC', commodity: 'HRW Wheat', contractPo: null, originBin: null, gross: 36130, tare: 14180, net: 21950, tareSource: 'stored', status: 'done' },
-    { id: '0048205', time: [12, 31], vehicleId: 'TRK-440', vehicleDesc: 'International LT', hauler: 'Tallgrass Ag', commodity: 'Oats', contractPo: null, originBin: null, gross: 30940, tare: 12660, net: 18280, tareSource: 'stored', status: 'done' }
+    { id: '0048213', time: [14, 32], vehicleId: 'TRK-148', vehicleDesc: 'Peterbilt 579', hauler: 'Prairie Gold Co-op', commodity: 'Corn #2 Yellow', invoiceNumber: 'INV-022841', originBin: 'Field 7 · Bin 3', gross: 35570, tare: 14180, net: 21390, tareSource: 'stored', status: 'live' },
+    { id: '0048212', time: [14, 18], vehicleId: 'TRK-203', vehicleDesc: 'Kenworth T680', hauler: 'Heartland Farms', commodity: 'Soybeans', invoiceNumber: null, originBin: null, gross: 35490, tare: 14180, net: 21310, tareSource: 'stored', status: 'done' },
+    { id: '0048211', time: [14, 2], vehicleId: 'TRK-077', vehicleDesc: 'Freightliner Cascadia', hauler: 'Prairie Gold Co-op', commodity: 'Corn #2 Yellow', invoiceNumber: null, originBin: null, gross: 34010, tare: 13540, net: 20470, tareSource: 'stored', status: 'done' },
+    { id: '0048210', time: [13, 51], vehicleId: 'TRK-148', vehicleDesc: 'Peterbilt 579', hauler: 'Schmidt Grain LLC', commodity: 'HRW Wheat', invoiceNumber: null, originBin: null, gross: 36240, tare: 14180, net: 22060, tareSource: 'stored', status: 'done' },
+    { id: '0048209', time: [13, 37], vehicleId: 'TRK-512', vehicleDesc: 'Mack Anthem', hauler: 'Heartland Farms', commodity: 'Grain Sorghum (Milo)', invoiceNumber: null, originBin: null, gross: 32700, tare: 12950, net: 19750, tareSource: 'stored', status: 'done' },
+    { id: '0048208', time: [13, 20], vehicleId: 'TRK-203', vehicleDesc: 'Kenworth T680', hauler: 'Tallgrass Ag', commodity: 'Soybeans', invoiceNumber: null, originBin: null, gross: 35170, tare: 14180, net: 20990, tareSource: 'stored', status: 'done' },
+    { id: '0048207', time: [13, 4], vehicleId: 'TRK-091', vehicleDesc: 'Volvo VNL', hauler: 'Prairie Gold Co-op', commodity: 'Corn #2 Yellow', invoiceNumber: null, originBin: null, gross: 34620, tare: 13670, net: 20950, tareSource: 'stored', status: 'done' },
+    { id: '0048206', time: [12, 48], vehicleId: 'TRK-148', vehicleDesc: 'Peterbilt 579', hauler: 'Schmidt Grain LLC', commodity: 'HRW Wheat', invoiceNumber: null, originBin: null, gross: 36130, tare: 14180, net: 21950, tareSource: 'stored', status: 'done' },
+    { id: '0048205', time: [12, 31], vehicleId: 'TRK-440', vehicleDesc: 'International LT', hauler: 'Tallgrass Ag', commodity: 'Oats', invoiceNumber: null, originBin: null, gross: 30940, tare: 12660, net: 18280, tareSource: 'stored', status: 'done' }
   ]
+
+  const priceByCommodity = new Map(products.map((p) => [p.name, p.pricePerKg]))
 
   const tickets: Ticket[] = mockToday.map((t) => ({
     ...t,
     createdAt: isoDaysAgo(now, 0, t.time[0], t.time[1]),
     capturedAt: t.status === 'done' ? isoDaysAgo(now, 0, t.time[0], t.time[1]) : null,
-    direction: 'inbound'
+    direction: 'inbound',
+    unitPrice: t.commodity ? priceByCommodity.get(t.commodity) ?? null : null
   }))
 
   // 15 filler tickets earlier today to bring the day's total to 24 (22 in / 2 out),
@@ -122,11 +125,12 @@ export function buildSeed(now: Date = new Date()): SeedData {
       vehicleDesc: vehicle.description,
       hauler,
       commodity: product.name,
-      contractPo: `CN-${randInt(rng, 20000, 29999)}`,
+      invoiceNumber: `INV-${randInt(rng, 20000, 29999)}`,
       originBin: `Field ${randInt(rng, 1, 12)} · Bin ${randInt(rng, 1, 6)}`,
       gross,
       tare: vehicle.storedTare,
       net: gross - (vehicle.storedTare ?? 0),
+      unitPrice: product.pricePerKg,
       tareSource: 'stored',
       status: 'done',
       direction: i < 2 ? 'outbound' : 'inbound'
@@ -153,11 +157,12 @@ export function buildSeed(now: Date = new Date()): SeedData {
         vehicleDesc: vehicle.description,
         hauler,
         commodity: product.name,
-        contractPo: `CN-${randInt(rng, 20000, 29999)}`,
+        invoiceNumber: `INV-${randInt(rng, 20000, 29999)}`,
         originBin: `Field ${randInt(rng, 1, 12)} · Bin ${randInt(rng, 1, 6)}`,
         gross,
         tare: vehicle.storedTare,
         net: gross - (vehicle.storedTare ?? 0),
+        unitPrice: product.pricePerKg,
         tareSource: 'stored',
         status: 'done',
         direction: rng() < 0.08 ? 'outbound' : 'inbound'
@@ -183,9 +188,12 @@ export function buildSeed(now: Date = new Date()): SeedData {
     lastCalibration: isoDaysAgo(now, 164, 9, 0),
     tareValidityDays: 90,
     nextTicketNumber: 48213,
+    nextInvoiceNumber: 22841,
     printerName: 'Zebra ZD421',
     autoPrint: true,
     copies: 2,
+    companyDetails: '',
+    companyLogo: null,
     backupPath: '',
     backupIntervalHours: 24,
     lastBackupAt: null

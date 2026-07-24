@@ -27,8 +27,9 @@ export function updateSettings(patch: Partial<Settings>): Settings {
         parity=@parity, stopBits=@stopBits,
         scaleCapacityKg=@scaleCapacityKg, scaleDivisionKg=@scaleDivisionKg,
         lastCalibration=@lastCalibration, tareValidityDays=@tareValidityDays,
-        nextTicketNumber=@nextTicketNumber, printerName=@printerName,
+        nextTicketNumber=@nextTicketNumber, nextInvoiceNumber=@nextInvoiceNumber, printerName=@printerName,
         autoPrint=@autoPrint, copies=@copies,
+        companyDetails=@companyDetails, companyLogo=@companyLogo,
         backupPath=@backupPath, backupIntervalHours=@backupIntervalHours,
         lastBackupAt=@lastBackupAt
       WHERE id = 1`
@@ -51,5 +52,17 @@ export function advanceTicketCounterPast(n: number): void {
   getDb()
     .prepare('UPDATE settings SET nextTicketNumber = MAX(nextTicketNumber, ?) WHERE id = 1')
     .run(n + 1)
+  notify('settings')
+}
+
+export function peekNextInvoiceNumber(): number {
+  const row = getDb().prepare('SELECT nextInvoiceNumber FROM settings WHERE id = 1').get() as {
+    nextInvoiceNumber: number
+  }
+  return row.nextInvoiceNumber
+}
+
+export function advanceInvoiceCounter(): void {
+  getDb().prepare('UPDATE settings SET nextInvoiceNumber = nextInvoiceNumber + 1 WHERE id = 1').run()
   notify('settings')
 }

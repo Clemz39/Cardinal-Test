@@ -23,9 +23,14 @@ export function getProduct(id: string): ProductWithStats | null {
   return row ? withStats(row) : null
 }
 
+export function getProductByName(name: string): Product | null {
+  const row = getDb().prepare('SELECT * FROM products WHERE name = ?').get(name) as Product | undefined
+  return row ?? null
+}
+
 export function createProduct(input: Product): ProductWithStats {
   getDb()
-    .prepare('INSERT INTO products (id, name, color, pricePerTonne) VALUES (@id, @name, @color, @pricePerTonne)')
+    .prepare('INSERT INTO products (id, name, color, pricePerKg) VALUES (@id, @name, @color, @pricePerKg)')
     .run(input)
   notify('products')
   return getProduct(input.id)!
@@ -36,8 +41,8 @@ export function updateProduct(id: string, patch: Partial<Omit<Product, 'id'>>): 
   if (!current) throw new Error(`Product ${id} not found`)
   const next = { ...current, ...patch }
   getDb()
-    .prepare('UPDATE products SET name=@name, color=@color, pricePerTonne=@pricePerTonne WHERE id=@id')
-    .run({ id, name: next.name, color: next.color, pricePerTonne: next.pricePerTonne })
+    .prepare('UPDATE products SET name=@name, color=@color, pricePerKg=@pricePerKg WHERE id=@id')
+    .run({ id, name: next.name, color: next.color, pricePerKg: next.pricePerKg })
   notify('products')
   return getProduct(id)!
 }

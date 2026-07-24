@@ -26,9 +26,12 @@ CREATE TABLE IF NOT EXISTS settings (
   lastCalibration TEXT NOT NULL,
   tareValidityDays INTEGER NOT NULL,
   nextTicketNumber INTEGER NOT NULL,
+  nextInvoiceNumber INTEGER NOT NULL DEFAULT 1000,
   printerName TEXT NOT NULL,
   autoPrint INTEGER NOT NULL,
   copies INTEGER NOT NULL,
+  companyDetails TEXT NOT NULL DEFAULT '',
+  companyLogo TEXT,
   backupPath TEXT NOT NULL DEFAULT '',
   backupIntervalHours INTEGER NOT NULL DEFAULT 24,
   lastBackupAt TEXT
@@ -55,7 +58,7 @@ CREATE TABLE IF NOT EXISTS products (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   color TEXT NOT NULL,
-  pricePerTonne REAL NOT NULL
+  pricePerKg REAL NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS tickets (
@@ -66,11 +69,12 @@ CREATE TABLE IF NOT EXISTS tickets (
   vehicleDesc TEXT,
   hauler TEXT,
   commodity TEXT,
-  contractPo TEXT,
+  invoiceNumber TEXT,
   originBin TEXT,
   gross REAL,
   tare REAL,
   net REAL,
+  unitPrice REAL,
   tareSource TEXT NOT NULL,
   status TEXT NOT NULL,
   direction TEXT NOT NULL
@@ -85,14 +89,27 @@ function runMigrations(database: Database.Database): void {
   const migrations = [
     `ALTER TABLE settings ADD COLUMN backupPath TEXT NOT NULL DEFAULT ''`,
     `ALTER TABLE settings ADD COLUMN backupIntervalHours INTEGER NOT NULL DEFAULT 24`,
-    `ALTER TABLE settings ADD COLUMN lastBackupAt TEXT`
+    `ALTER TABLE settings ADD COLUMN lastBackupAt TEXT`,
+    `ALTER TABLE settings ADD COLUMN nextInvoiceNumber INTEGER NOT NULL DEFAULT 1000`,
+    `ALTER TABLE settings ADD COLUMN companyDetails TEXT NOT NULL DEFAULT ''`,
+    `ALTER TABLE settings ADD COLUMN companyLogo TEXT`,
+    `ALTER TABLE tickets RENAME COLUMN contractPo TO invoiceNumber`,
+    `ALTER TABLE tickets ADD COLUMN unitPrice REAL`
   ]
   for (const sql of migrations) {
     try {
       database.exec(sql)
     } catch {
-      // column already exists on fresh DBs — expected
+      // already applied on fresh/updated DBs — expected
     }
+  }
+
+  try {
+    // Only succeeds on DBs still carrying the legacy column; convert the values exactly once.
+    database.exec('ALTER TABLE products RENAME COLUMN pricePerTonne TO pricePerKg')
+    database.exec('UPDATE products SET pricePerKg = pricePerKg / 1000.0')
+  } catch {
+    // already renamed, or fresh db created with pricePerKg directly
   }
 }
 
@@ -117,13 +134,15 @@ function seedIfEmpty(database: Database.Database, seed: ReturnType<typeof buildS
       id, facilityName, facilityAddress, ntepCert, operatorName, scaleLabel,
       serialPort, baudRate, protocol, dataBits, parity, stopBits,
       scaleCapacityKg, scaleDivisionKg, lastCalibration, tareValidityDays,
-      nextTicketNumber, printerName, autoPrint, copies,
+      nextTicketNumber, nextInvoiceNumber, printerName, autoPrint, copies,
+      companyDetails, companyLogo,
       backupPath, backupIntervalHours, lastBackupAt
     ) VALUES (
       1, @facilityName, @facilityAddress, @ntepCert, @operatorName, @scaleLabel,
       @serialPort, @baudRate, @protocol, @dataBits, @parity, @stopBits,
       @scaleCapacityKg, @scaleDivisionKg, @lastCalibration, @tareValidityDays,
-      @nextTicketNumber, @printerName, @autoPrint, @copies,
+      @nextTicketNumber, @nextInvoiceNumber, @printerName, @autoPrint, @copies,
+      '', NULL,
       '', 24, NULL
     )
   `)
@@ -134,16 +153,16 @@ function seedIfEmpty(database: Database.Database, seed: ReturnType<typeof buildS
     VALUES (@id, @description, @hauler, @plate, @storedTare, @tareCapturedAt)
   `)
   const insertProduct = database.prepare(`
-    INSERT INTO products (id, name, color, pricePerTonne)
-    VALUES (@id, @name, @color, @pricePerTonne)
+    INSERT INTO products (id, name, color, pricePerKg)
+    VALUES (@id, @name, @color, @pricePerKg)
   `)
   const insertTicket = database.prepare(`
     INSERT INTO tickets (
       id, createdAt, capturedAt, vehicleId, vehicleDesc, hauler, commodity,
-      contractPo, originBin, gross, tare, net, tareSource, status, direction
+      invoiceNumber, originBin, gross, tare, net, unitPrice, tareSource, status, direction
     ) VALUES (
       @id, @createdAt, @capturedAt, @vehicleId, @vehicleDesc, @hauler, @commodity,
-      @contractPo, @originBin, @gross, @tare, @net, @tareSource, @status, @direction
+      @invoiceNumber, @originBin, @gross, @tare, @net, @unitPrice, @tareSource, @status, @direction
     )
   `)
 

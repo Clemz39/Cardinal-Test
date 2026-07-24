@@ -7,7 +7,7 @@ import { SelectField } from '../components/SelectField'
 import { TextField } from '../components/TextField'
 import { useDataChanged } from '../hooks/useDataChanged'
 import { cx } from '../lib/cx'
-import { formatDateLong, formatDate, formatKg, formatKgUnit, formatTime, formatTonnes } from '@shared/format'
+import { formatDateLong, formatDate, formatKg, formatKgUnit, formatTime, formatTonnes, formatMoney } from '@shared/format'
 import type { ProductWithStats, ScaleReading, Settings, Ticket, VehicleWithStats } from '@shared/types'
 import styles from './WeighScreen.module.css'
 
@@ -210,12 +210,12 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
               </SelectField>
             </div>
             <div>
-              <FieldLabel>CONTRACT / PO</FieldLabel>
+              <FieldLabel>INVOICE</FieldLabel>
               <TextField
                 mono
-                value={draft.contractPo ?? ''}
-                placeholder="CN-00000"
-                onChange={(e) => window.api.draft.setField('contractPo', e.target.value).then(setDraft)}
+                value={draft.invoiceNumber ?? ''}
+                placeholder="INV-000000"
+                onChange={(e) => window.api.draft.setField('invoiceNumber', e.target.value).then(setDraft)}
               />
             </div>
             <div>
@@ -286,6 +286,12 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
                 <span>TONNES</span>
                 <span>{formatTonnes(draft.net)}</span>
               </div>
+              {draft.unitPrice != null && (
+                <div className={cx(styles.previewRow, styles.previewFaintRow)}>
+                  <span>VALUE</span>
+                  <span>{formatMoney(draft.net != null ? draft.net * draft.unitPrice : null)}</span>
+                </div>
+              )}
             </div>
           </div>
 

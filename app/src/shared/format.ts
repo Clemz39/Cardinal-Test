@@ -17,6 +17,20 @@ export function formatTicketNumber(n: number): string {
   return String(n).padStart(7, '0')
 }
 
+export function formatInvoiceNumber(n: number): string {
+  return `INV-${String(n).padStart(6, '0')}`
+}
+
+export function formatMoney(value: number | null | undefined): string {
+  if (value === null || value === undefined || Number.isNaN(value)) return '—'
+  return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+}
+
+export function formatPricePerKg(value: number | null | undefined): string {
+  if (value === null || value === undefined || Number.isNaN(value)) return '—'
+  return `$${value.toFixed(3)} / kg`
+}
+
 export function formatDate(iso: string): string {
   const d = new Date(iso)
   const mm = String(d.getMonth() + 1).padStart(2, '0')

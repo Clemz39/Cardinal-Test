@@ -1,5 +1,5 @@
 import { cx } from '../lib/cx'
-import { formatDateTimeLong, formatKgUnit, formatTonnes } from '@shared/format'
+import { formatDateTimeLong, formatKgUnit, formatTonnes, formatMoney, formatPricePerKg } from '@shared/format'
 import type { Settings, TareSource, Ticket } from '@shared/types'
 import styles from './PrintTicketLayout.module.css'
 
@@ -22,9 +22,13 @@ export function PrintTicketLayout({ ticket, settings }: PrintTicketLayoutProps) 
   return (
     <div className={styles.layout}>
       <div className={styles.header}>
-        <div className={styles.facility}>{settings.facilityName.toUpperCase()}</div>
-        <div className={styles.address}>{settings.facilityAddress}</div>
-        <div className={styles.ticketNo}>SCALE TICKET No. {ticket.id}</div>
+        {settings.companyLogo && <img className={styles.logo} src={settings.companyLogo} alt="" />}
+        <div className={styles.headerText}>
+          <div className={styles.facility}>{settings.facilityName.toUpperCase()}</div>
+          <div className={styles.address}>{settings.facilityAddress}</div>
+          {settings.companyDetails && <div className={styles.details}>{settings.companyDetails}</div>}
+          <div className={styles.ticketNo}>SCALE TICKET No. {ticket.id}</div>
+        </div>
       </div>
       <div className={styles.fields}>
         <div className={styles.row}>
@@ -47,8 +51,8 @@ export function PrintTicketLayout({ ticket, settings }: PrintTicketLayoutProps) 
           <span>{ticket.commodity ?? '—'}</span>
         </div>
         <div className={styles.row}>
-          <span className={styles.key}>CONTRACT</span>
-          <span>{ticket.contractPo ?? '—'}</span>
+          <span className={styles.key}>INVOICE</span>
+          <span>{ticket.invoiceNumber ?? '—'}</span>
         </div>
         <div className={styles.divider} />
         <div className={cx(styles.row, styles.weightRow)}>
@@ -67,11 +71,23 @@ export function PrintTicketLayout({ ticket, settings }: PrintTicketLayoutProps) 
           <span>TONNES</span>
           <span>{formatTonnes(ticket.net)}</span>
         </div>
+        {ticket.unitPrice != null && (
+          <>
+            <div className={styles.divider} />
+            <div className={styles.row}>
+              <span className={styles.key}>PRICE</span>
+              <span>{formatPricePerKg(ticket.unitPrice)}</span>
+            </div>
+            <div className={cx(styles.row, styles.valueRow)}>
+              <span>VALUE</span>
+              <span>{formatMoney(ticket.net != null ? ticket.net * ticket.unitPrice : null)}</span>
+            </div>
+          </>
+        )}
       </div>
       <div className={styles.footer}>
         {`OPERATOR ${settings.operatorName} · SCALE ${scaleNumber(settings.scaleLabel)} · NTEP ${settings.ntepCert}`.toUpperCase()}
       </div>
-      <div className={styles.barcode}>▌▌▍▎▌▍▎▌▌▍▎▌▍▌▎▌▍▎▌▌▍</div>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Dot } from '../components/Dot'
 import { FieldLabel } from '../components/FieldLabel'
 import { SelectField } from '../components/SelectField'
@@ -23,6 +23,8 @@ export function SettingsScreen() {
   const [backupError, setBackupError] = useState<string | null>(null)
   const [restoreStatus, setRestoreStatus] = useState<'idle' | 'running' | 'error'>('idle')
   const [restoreError, setRestoreError] = useState<string | null>(null)
+  const [logoError, setLogoError] = useState<string | null>(null)
+  const logoInputRef = useRef<HTMLInputElement>(null)
 
   const loadSettings = (): void => {
     window.api.settings.get().then(setSettings)
@@ -70,6 +72,26 @@ export function SettingsScreen() {
       setRestoreError(result.error)
     }
     // on success the window reloads itself shortly after — stay in the running state until then
+  }
+
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      setLogoError('Logo must be an image file')
+      return
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setLogoError('Logo must be under 2MB')
+      return
+    }
+    setLogoError(null)
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === 'string') patch({ companyLogo: reader.result })
+    }
+    reader.readAsDataURL(file)
   }
 
   const readNow = (): void => {
@@ -346,6 +368,67 @@ export function SettingsScreen() {
                   onChange={(e) => setSettings({ ...settings, copies: Number(e.target.value) })}
                   onBlur={(e) => patch({ copies: Math.max(1, Number(e.target.value) || settings.copies) })}
                 />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.sideCard}>
+            <div className={styles.sideCardTitle}>Company Branding</div>
+            <div className={styles.rowList}>
+              <div>
+                <FieldLabel>COMPANY NAME</FieldLabel>
+                <TextField
+                  value={settings.facilityName}
+                  onChange={(e) => setSettings({ ...settings, facilityName: e.target.value })}
+                  onBlur={(e) => patch({ facilityName: e.target.value.trim() || settings.facilityName })}
+                />
+              </div>
+              <div>
+                <FieldLabel>ADDRESS</FieldLabel>
+                <TextField
+                  value={settings.facilityAddress}
+                  onChange={(e) => setSettings({ ...settings, facilityAddress: e.target.value })}
+                  onBlur={(e) => patch({ facilityAddress: e.target.value.trim() || settings.facilityAddress })}
+                />
+              </div>
+              <div>
+                <FieldLabel>OTHER DETAILS</FieldLabel>
+                <textarea
+                  className={styles.brandingTextarea}
+                  rows={2}
+                  placeholder="Phone · Email · License #"
+                  value={settings.companyDetails}
+                  onChange={(e) => setSettings({ ...settings, companyDetails: e.target.value })}
+                  onBlur={(e) => patch({ companyDetails: e.target.value })}
+                />
+              </div>
+              <div>
+                <FieldLabel>LOGO — TOP LEFT OF TICKET</FieldLabel>
+                <div className={styles.logoRow}>
+                  {settings.companyLogo ? (
+                    <img className={styles.logoPreview} src={settings.companyLogo} alt="" />
+                  ) : (
+                    <div className={styles.logoPlaceholder}>No logo</div>
+                  )}
+                  <div className={styles.logoButtons}>
+                    <button type="button" className={styles.backupBrowse} onClick={() => logoInputRef.current?.click()}>
+                      Upload
+                    </button>
+                    {settings.companyLogo && (
+                      <button type="button" className={styles.backupRestore} onClick={() => patch({ companyLogo: null })}>
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={handleLogoChange}
+                  />
+                </div>
+                {logoError && <div className={cx(styles.backupFeedback, styles.backupFeedbackError)}>{logoError}</div>}
               </div>
             </div>
           </div>

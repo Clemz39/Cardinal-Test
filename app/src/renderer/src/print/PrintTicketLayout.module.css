@@ -1,4 +1,5 @@
 .layout {
+  position: relative;
   padding: 30px 34px;
   font-family: var(--font-mono);
   background: var(--color-card-white);
@@ -11,6 +12,19 @@
   margin-bottom: 14px;
 }
 
+.logo {
+  position: absolute;
+  top: 30px;
+  left: 34px;
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.headerText {
+  width: 100%;
+}
+
 .facility {
   font: 700 18px var(--font-sans);
   color: var(--color-text);
@@ -21,6 +35,13 @@
   font: 500 11px var(--font-mono);
   color: var(--color-text-muted);
   margin-top: 3px;
+}
+
+.details {
+  font: 500 10px var(--font-mono);
+  color: var(--color-text-faint);
+  margin-top: 2px;
+  white-space: pre-line;
 }
 
 .ticketNo {
@@ -64,17 +85,15 @@
   color: var(--color-text-muted);
 }
 
+.valueRow {
+  font-weight: 700;
+  font-size: 15px;
+  margin-top: 4px;
+}
+
 .footer {
   text-align: center;
   margin-top: 18px;
   font: 500 10px var(--font-mono);
   color: var(--color-text-faint);
-}
-
-.barcode {
-  text-align: center;
-  margin-top: 10px;
-  font: 700 14px var(--font-mono);
-  color: var(--color-text);
-  letter-spacing: 4px;
 }

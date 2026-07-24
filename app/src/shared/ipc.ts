@@ -25,7 +25,7 @@ export interface AtlasApi {
     get(): Promise<Ticket>
     reset(): Promise<Ticket>
     setVehicle(vehicleId: string | null): Promise<Ticket>
-    setField(field: 'hauler' | 'commodity' | 'contractPo' | 'originBin', value: string): Promise<Ticket>
+    setField(field: 'hauler' | 'commodity' | 'invoiceNumber' | 'originBin', value: string): Promise<Ticket>
     pressZero(): Promise<OkResult>
     pressTare(): Promise<OkResult>
     captureGross(): Promise<OkResult & { ticket?: Ticket }>
