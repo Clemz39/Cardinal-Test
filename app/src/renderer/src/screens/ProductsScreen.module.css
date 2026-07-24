@@ -132,9 +132,25 @@
 
 .editActions {
   display: flex;
+  align-items: center;
   gap: 10px;
   justify-content: flex-end;
   margin-top: 16px;
+}
+
+.deleteLink {
+  font: 600 12px var(--font-sans);
+  color: var(--color-text-faint);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-right: auto;
+}
+
+.deleteLink:hover {
+  color: #e05555;
+  text-decoration: underline;
 }
 
 .actionError {

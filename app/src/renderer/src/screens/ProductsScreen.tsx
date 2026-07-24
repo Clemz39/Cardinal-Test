@@ -93,6 +93,19 @@ export function ProductsScreen() {
     setSelectedId(null)
   }
 
+  const handleDelete = async (): Promise<void> => {
+    if (!selectedId) return
+    const product = products.find((p) => p.id === selectedId)
+    const confirmed = window.confirm(
+      `Remove ${product?.name ?? 'this commodity'}?\n\nPast tickets keep their own record of the commodity name and price, but it will no longer be selectable for new weighings. This cannot be undone.`
+    )
+    if (!confirmed) return
+    await window.api.products.delete(selectedId)
+    setMode('idle')
+    setSelectedId(null)
+    setActionError(null)
+  }
+
   return (
     <div className={styles.screen}>
       <div className={styles.headerRow}>
@@ -136,7 +149,13 @@ export function ProductsScreen() {
               </span>
             </div>
             {mode === 'editing' && selectedId === p.id && (
-              <EditProductForm form={editForm} onChange={setEditForm} onSave={submitEdit} onCancel={cancelEdit} />
+              <EditProductForm
+                form={editForm}
+                onChange={setEditForm}
+                onSave={submitEdit}
+                onCancel={cancelEdit}
+                onDelete={handleDelete}
+              />
             )}
           </div>
         ))}
@@ -212,7 +231,11 @@ function AddProductForm({ form, onChange, onSave, onCancel }: ProductFormProps) 
   )
 }
 
-function EditProductForm({ form, onChange, onSave, onCancel }: ProductFormProps) {
+interface EditProductFormProps extends ProductFormProps {
+  onDelete: () => void
+}
+
+function EditProductForm({ form, onChange, onSave, onCancel, onDelete }: EditProductFormProps) {
   return (
     <div className={styles.editRow}>
       <div className={styles.editGrid}>
@@ -236,6 +259,9 @@ function EditProductForm({ form, onChange, onSave, onCancel }: ProductFormProps)
         </div>
       </div>
       <div className={styles.editActions}>
+        <button type="button" className={styles.deleteLink} onClick={onDelete}>
+          Delete Commodity
+        </button>
         <Button variant="secondary" style={{ padding: '11px 20px', fontSize: 12 }} onClick={onCancel}>
           Cancel
         </Button>
