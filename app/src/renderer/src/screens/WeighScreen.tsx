@@ -119,8 +119,8 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
           <span className={styles.calBannerIcon}>{calibration.status === 'overdue' ? '⚠' : '◷'}</span>
           <span>
             {calibration.status === 'overdue'
-              ? `Scale recalibration was due ${formatDate(calibration.dueDate)} — schedule service as soon as possible.`
-              : `Scale recalibration due ${formatDate(calibration.dueDate)} (${calibration.daysRemaining} day${calibration.daysRemaining === 1 ? '' : 's'}) — schedule service soon.`}
+              ? `Scale recertification was due ${formatDate(calibration.dueDate)} — schedule service as soon as possible.`
+              : `Scale recertification due ${formatDate(calibration.dueDate)} (${calibration.daysRemaining} day${calibration.daysRemaining === 1 ? '' : 's'}) — schedule service soon.`}
           </span>
         </div>
       )}

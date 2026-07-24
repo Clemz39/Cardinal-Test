@@ -352,11 +352,11 @@ export function SettingsScreen() {
                 <span className={styles.kvValue}>kg / t</span>
               </div>
               <div className={styles.kvRow}>
-                <span className={styles.kvLabel}>Last calibration</span>
+                <span className={styles.kvLabel}>Last recertification</span>
                 <span className={styles.kvValue}>{formatDate(settings.lastCalibration)}</span>
               </div>
               <div className={styles.kvRow}>
-                <span className={styles.kvLabel}>Recalibration interval</span>
+                <span className={styles.kvLabel}>Recertification interval</span>
                 <div className={styles.calIntervalWrap}>
                   <TextField
                     mono
@@ -373,7 +373,7 @@ export function SettingsScreen() {
               </div>
               <div className={styles.calRecordRow}>
                 <button type="button" className={styles.calRecordButton} onClick={handleRecordCalibration}>
-                  Record Calibration Today
+                  Record Recertification Today
                 </button>
                 {calRecorded && <span className={styles.calRecordedNote}>Recorded</span>}
               </div>

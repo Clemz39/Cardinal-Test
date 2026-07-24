@@ -19,7 +19,7 @@ function CalibrationBadge({ settings }: { settings: Settings | null }) {
   if (!settings) {
     return (
       <Badge tone="dark" variant="outline" pill>
-        CAL —
+        CERT —
       </Badge>
     )
   }
@@ -29,15 +29,15 @@ function CalibrationBadge({ settings }: { settings: Settings | null }) {
   )
   if (status === 'ok') {
     return (
-      <Badge tone="dark" variant="outline" pill title={`Next calibration due ${formatDate(dueDate)}`}>
-        CAL OK
+      <Badge tone="dark" variant="outline" pill title={`Next recertification due ${formatDate(dueDate)}`}>
+        CERT OK
       </Badge>
     )
   }
   if (status === 'dueSoon') {
     return (
       <Badge tone="amber" variant="outline" pill title={`Due ${formatDate(dueDate)}`}>
-        CAL DUE {daysRemaining}D
+        CERT DUE {daysRemaining}D
       </Badge>
     )
   }
@@ -49,7 +49,7 @@ function CalibrationBadge({ settings }: { settings: Settings | null }) {
       className={styles.calOverdue}
       title={`Was due ${formatDate(dueDate)}`}
     >
-      CAL OVERDUE
+      CERT OVERDUE
     </Badge>
   )
 }
