@@ -131,7 +131,7 @@ export function TopChrome({ screen, onNavigate, currentUser, onLogout }: TopChro
             glow={scaleStatus?.status === 'connected'}
             pulse={scaleStatus?.status === 'connected' || scaleStatus?.status === 'connecting'}
           />
-          <span>{settings ? serialSummary(settings) : ''}</span>
+          <span className={styles.connectionText}>{settings ? serialSummary(settings) : ''}</span>
         </div>
         <CalibrationBadge settings={settings} />
         <div className={styles.operator}>{currentUser.name}</div>

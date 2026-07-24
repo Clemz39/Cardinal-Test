@@ -1,4 +1,5 @@
 .chrome {
+  container-type: inline-size;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -14,6 +15,7 @@
   align-items: center;
   gap: 14px;
   min-width: 0;
+  flex-shrink: 0;
 }
 
 .logo {
@@ -43,6 +45,7 @@
   display: flex;
   align-items: center;
   gap: 2px;
+  flex-shrink: 0;
 }
 
 .tab {
@@ -53,6 +56,7 @@
   padding: 7px 11px;
   border-radius: var(--radius);
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -118,4 +122,41 @@
   background: #b33a3a !important;
   border-color: #b33a3a !important;
   color: #fff !important;
+}
+
+/*
+ * Progressive disclosure as the window narrows: navigation, the operator's
+ * name/role, and the connection dot always stay put and never overlap.
+ * Lower-priority info (scale label, connection detail text, clock) drops
+ * away first to make room, rather than letting anything shrink into
+ * unreadable/overlapping text.
+ */
+@container (max-width: 1550px) {
+  .scaleLabel {
+    display: none;
+  }
+}
+
+@container (max-width: 1400px) {
+  .connectionText {
+    display: none;
+  }
+  .right {
+    gap: 10px;
+  }
+  .tab {
+    padding: 7px 8px;
+  }
+}
+
+@container (max-width: 1250px) {
+  .clock {
+    display: none;
+  }
+  .right {
+    gap: 8px;
+  }
+  .left {
+    gap: 10px;
+  }
 }
