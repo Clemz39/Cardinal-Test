@@ -87,6 +87,15 @@ export async function printTicket(id: string, copies = 1): Promise<OkResult> {
   const ticket = getTicket(id)
   if (!ticket) return { ok: false, reason: 'Ticket not found' }
 
+  // Test environments have no real printer to hand off to (same reason the scale has a
+  // simulator driver) — skip the OS print dialog and go straight to the success path so
+  // the print-locks-the-ticket behavior can be exercised deterministically.
+  if (process.env.ATLAS_E2E_FAKE_PRINT === '1') {
+    markPrinted(id)
+    notify('tickets', 'draft')
+    return { ok: true }
+  }
+
   const win = new BrowserWindow({
     show: false,
     webPreferences: { preload: PRELOAD_PATH, contextIsolation: true, sandbox: false }
