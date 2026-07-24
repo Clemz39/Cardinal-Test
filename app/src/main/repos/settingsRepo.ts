@@ -23,7 +23,7 @@ export function updateSettings(patch: Partial<Settings>): Settings {
       `UPDATE settings SET
         facilityName=@facilityName, facilityAddress=@facilityAddress, ntepCert=@ntepCert,
         operatorName=@operatorName, scaleLabel=@scaleLabel,
-        serialPort=@serialPort, baudRate=@baudRate, protocol=@protocol, dataBits=@dataBits,
+        dataSource=@dataSource, serialPort=@serialPort, baudRate=@baudRate, protocol=@protocol, dataBits=@dataBits,
         parity=@parity, stopBits=@stopBits,
         scaleCapacityKg=@scaleCapacityKg, scaleDivisionKg=@scaleDivisionKg,
         lastCalibration=@lastCalibration, tareValidityDays=@tareValidityDays,

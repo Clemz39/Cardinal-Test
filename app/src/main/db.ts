@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS settings (
   ntepCert TEXT NOT NULL,
   operatorName TEXT NOT NULL,
   scaleLabel TEXT NOT NULL,
+  dataSource TEXT NOT NULL DEFAULT 'simulator',
   serialPort TEXT NOT NULL,
   baudRate INTEGER NOT NULL,
   protocol TEXT NOT NULL,
@@ -93,6 +94,7 @@ function runMigrations(database: Database.Database): void {
     `ALTER TABLE settings ADD COLUMN nextInvoiceNumber INTEGER NOT NULL DEFAULT 1000`,
     `ALTER TABLE settings ADD COLUMN companyDetails TEXT NOT NULL DEFAULT ''`,
     `ALTER TABLE settings ADD COLUMN companyLogo TEXT`,
+    `ALTER TABLE settings ADD COLUMN dataSource TEXT NOT NULL DEFAULT 'simulator'`,
     `ALTER TABLE tickets RENAME COLUMN contractPo TO invoiceNumber`,
     `ALTER TABLE tickets ADD COLUMN unitPrice REAL`
   ]
@@ -132,14 +134,14 @@ function seedIfEmpty(database: Database.Database, seed: ReturnType<typeof buildS
   const insertSettings = database.prepare(`
     INSERT INTO settings (
       id, facilityName, facilityAddress, ntepCert, operatorName, scaleLabel,
-      serialPort, baudRate, protocol, dataBits, parity, stopBits,
+      dataSource, serialPort, baudRate, protocol, dataBits, parity, stopBits,
       scaleCapacityKg, scaleDivisionKg, lastCalibration, tareValidityDays,
       nextTicketNumber, nextInvoiceNumber, printerName, autoPrint, copies,
       companyDetails, companyLogo,
       backupPath, backupIntervalHours, lastBackupAt
     ) VALUES (
       1, @facilityName, @facilityAddress, @ntepCert, @operatorName, @scaleLabel,
-      @serialPort, @baudRate, @protocol, @dataBits, @parity, @stopBits,
+      @dataSource, @serialPort, @baudRate, @protocol, @dataBits, @parity, @stopBits,
       @scaleCapacityKg, @scaleDivisionKg, @lastCalibration, @tareValidityDays,
       @nextTicketNumber, @nextInvoiceNumber, @printerName, @autoPrint, @copies,
       '', NULL,

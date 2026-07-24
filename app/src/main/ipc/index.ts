@@ -1,5 +1,6 @@
 import { ipcMain, BrowserWindow, dialog } from 'electron'
-import { scaleSimulator } from '../scaleSimulator'
+import { scaleManager } from '../scale/manager'
+import { listSerialPorts } from '../scale/serialDriver'
 import { dataBus } from '../events'
 import { login, logout, getCurrentUser } from '../authSession'
 import {
@@ -28,7 +29,16 @@ import { getSettings, updateSettings } from '../repos/settingsRepo'
 import { performBackup, restoreBackup } from '../backupService'
 import { getReportSummary } from '../reportService'
 import { exportTicketsCsv, exportReportPdf, printTicket } from '../printing'
-import type { DataEntity, Product, ReportRange, ScaleReading, Settings, TicketFilter, Vehicle } from '../../shared/types'
+import type {
+  DataEntity,
+  Product,
+  ReportRange,
+  ScaleReading,
+  ScaleStatusInfo,
+  Settings,
+  TicketFilter,
+  Vehicle
+} from '../../shared/types'
 
 function broadcast(channel: string, payload: unknown): void {
   for (const win of BrowserWindow.getAllWindows()) {
@@ -109,9 +119,18 @@ export function registerIpcHandlers(): void {
   ipcMain.handle('reports:summary', (_e, range: ReportRange) => getReportSummary(range))
   ipcMain.handle('reports:exportPdf', (_e, range: ReportRange) => exportReportPdf(range))
 
-  ipcMain.handle('scale:getReading', () => scaleSimulator.getReading())
-  ipcMain.handle('scale:recentLines', (_e, limit?: number) => scaleSimulator.getRecentLines(limit))
+  ipcMain.handle('scale:getReading', () => scaleManager.getReading())
+  ipcMain.handle('scale:recentLines', (_e, limit?: number) => scaleManager.getRecentLines(limit))
+  ipcMain.handle('scale:getStatus', () => scaleManager.getStatus())
+  ipcMain.handle('scale:listPorts', async () => {
+    try {
+      return await listSerialPorts()
+    } catch {
+      return []
+    }
+  })
 
-  scaleSimulator.on('reading', (reading: ScaleReading) => broadcast('scale:reading', reading))
+  scaleManager.on('reading', (reading: ScaleReading) => broadcast('scale:reading', reading))
+  scaleManager.on('status', (status: ScaleStatusInfo) => broadcast('scale:status', status))
   dataBus.on('changed', (entities: DataEntity[]) => broadcast('data:changed', entities))
 }

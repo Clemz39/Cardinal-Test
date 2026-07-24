@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
 import type { AtlasApi } from '../shared/ipc'
-import type { DataEntity, ScaleReading } from '../shared/types'
+import type { DataEntity, ScaleReading, ScaleStatusInfo } from '../shared/types'
 
 const api: AtlasApi = {
   auth: {
@@ -56,7 +56,9 @@ const api: AtlasApi = {
   },
   scale: {
     getReading: () => ipcRenderer.invoke('scale:getReading'),
-    recentLines: (limit) => ipcRenderer.invoke('scale:recentLines', limit)
+    recentLines: (limit) => ipcRenderer.invoke('scale:recentLines', limit),
+    getStatus: () => ipcRenderer.invoke('scale:getStatus'),
+    listPorts: () => ipcRenderer.invoke('scale:listPorts')
   },
   backup: {
     now: () => ipcRenderer.invoke('backup:now'),
@@ -68,6 +70,11 @@ const api: AtlasApi = {
     const listener = (_event: IpcRendererEvent, reading: ScaleReading): void => callback(reading)
     ipcRenderer.on('scale:reading', listener)
     return () => ipcRenderer.removeListener('scale:reading', listener)
+  },
+  onScaleStatus: (callback) => {
+    const listener = (_event: IpcRendererEvent, status: ScaleStatusInfo): void => callback(status)
+    ipcRenderer.on('scale:status', listener)
+    return () => ipcRenderer.removeListener('scale:status', listener)
   },
   onDataChanged: (callback) => {
     const listener = (_event: IpcRendererEvent, entities: DataEntity[]): void => callback(entities)

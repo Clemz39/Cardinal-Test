@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events'
-import type { ScaleReading } from '../shared/types'
+import type { ScaleReading } from '../../shared/types'
+import type { ScaleDriver, ScaleStatusInfo } from './types'
 
 const TICK_MS = 200
 const STABLE_WINDOW_MS = 1200
@@ -14,7 +15,7 @@ function fmtRaw(weight: number, stable: boolean): string {
   return `${stable ? 'ST' : 'US'},GS,${sign}${mag} kg`
 }
 
-export class ScaleSimulator extends EventEmitter {
+export class ScaleSimulatorDriver extends EventEmitter implements ScaleDriver {
   private current = 0
   private target = 0
   private pushButtonTare = 0
@@ -30,6 +31,10 @@ export class ScaleSimulator extends EventEmitter {
   stop(): void {
     if (this.timer) clearInterval(this.timer)
     this.timer = null
+  }
+
+  getStatus(): ScaleStatusInfo {
+    return { status: 'connected', detail: 'Simulator' }
   }
 
   private tick(): void {
@@ -119,5 +124,3 @@ export class ScaleSimulator extends EventEmitter {
     return { ok: true }
   }
 }
-
-export const scaleSimulator = new ScaleSimulator()

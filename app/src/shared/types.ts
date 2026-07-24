@@ -54,6 +54,7 @@ export interface Settings {
   operatorName: string
   scaleLabel: string
   // connection
+  dataSource: 'simulator' | 'serial'
   serialPort: string
   baudRate: number
   protocol: string
@@ -86,6 +87,18 @@ export interface ScaleReading {
   pushButtonTare: number // kg, 0 if not engaged
   mode: 'GROSS' | 'NET'
   raw: string // protocol line, e.g. "ST,GS,+035570 kg"
+}
+
+export type ScaleConnectionStatus = 'connected' | 'connecting' | 'disconnected' | 'error'
+
+export interface ScaleStatusInfo {
+  status: ScaleConnectionStatus
+  detail?: string
+}
+
+export interface SerialPortInfo {
+  path: string
+  manufacturer?: string
 }
 
 export interface ReportRange {

@@ -1,7 +1,7 @@
 import { app, BrowserWindow, shell } from 'electron'
 import { join } from 'path'
 import { getDb } from './db'
-import { scaleSimulator } from './scaleSimulator'
+import { scaleManager } from './scale/manager'
 import { registerIpcHandlers } from './ipc'
 import { startBackupScheduler, stopBackupScheduler } from './backupService'
 import { loadAppRoute, PRELOAD_PATH } from './windowUrl'
@@ -37,7 +37,7 @@ function createMainWindow(): BrowserWindow {
 app.whenReady().then(() => {
   app.setName('Atlas Weigh Navigator')
   getDb()
-  scaleSimulator.start()
+  scaleManager.start()
   registerIpcHandlers()
   startBackupScheduler()
   createMainWindow()
@@ -49,5 +49,6 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   stopBackupScheduler()
+  scaleManager.stop()
   if (process.platform !== 'darwin') app.quit()
 })

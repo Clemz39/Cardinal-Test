@@ -6,7 +6,7 @@ import { TextField } from '../components/TextField'
 import { useDataChanged } from '../hooks/useDataChanged'
 import { cx } from '../lib/cx'
 import { formatDate, formatDateTime, formatTicketNumber } from '@shared/format'
-import type { Settings } from '@shared/types'
+import type { ScaleStatusInfo, SerialPortInfo, Settings } from '@shared/types'
 import styles from './SettingsScreen.module.css'
 
 const SERIAL_PORTS = ['COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6']
@@ -16,9 +16,26 @@ const DATA_BITS = [7, 8]
 const PARITIES = ['None', 'Even', 'Odd']
 const STOP_BITS = [1, 2]
 
+const STATUS_LABEL: Record<ScaleStatusInfo['status'], string> = {
+  connected: 'CONNECTED',
+  connecting: 'CONNECTING…',
+  disconnected: 'DISCONNECTED',
+  error: 'CONNECTION ERROR'
+}
+
+const STATUS_COLOR: Record<ScaleStatusInfo['status'], string> = {
+  connected: 'var(--color-green)',
+  connecting: 'var(--color-amber-text)',
+  disconnected: 'var(--color-text-faint)',
+  error: '#e05555'
+}
+
 export function SettingsScreen() {
   const [settings, setSettings] = useState<Settings | null>(null)
   const [streamLines, setStreamLines] = useState<string[] | null>(null)
+  const [liveStream, setLiveStream] = useState(false)
+  const [scaleStatus, setScaleStatus] = useState<ScaleStatusInfo | null>(null)
+  const [detectedPorts, setDetectedPorts] = useState<SerialPortInfo[]>([])
   const [backupStatus, setBackupStatus] = useState<'idle' | 'running' | 'ok' | 'error'>('idle')
   const [backupError, setBackupError] = useState<string | null>(null)
   const [restoreStatus, setRestoreStatus] = useState<'idle' | 'running' | 'error'>('idle')
@@ -32,6 +49,28 @@ export function SettingsScreen() {
 
   useEffect(loadSettings, [])
   useDataChanged(['settings'], loadSettings)
+
+  useEffect(() => {
+    window.api.scale.getStatus().then(setScaleStatus)
+    return window.api.onScaleStatus(setScaleStatus)
+  }, [])
+
+  useEffect(() => {
+    if (settings?.dataSource !== 'serial') return
+    const refresh = (): void => {
+      window.api.scale.listPorts().then(setDetectedPorts)
+    }
+    refresh()
+    const timer = setInterval(refresh, 4000)
+    return () => clearInterval(timer)
+  }, [settings?.dataSource])
+
+  useEffect(() => {
+    if (!liveStream) return
+    return window.api.onScaleReading((reading) => {
+      setStreamLines((prev) => [reading.raw, ...(prev ?? [])].slice(0, 30))
+    })
+  }, [liveStream])
 
   const patch = async (p: Partial<Settings>): Promise<void> => {
     const updated = await window.api.settings.update(p)
@@ -114,26 +153,72 @@ export function SettingsScreen() {
               <div className={styles.connectionName}>Weigh Indicator</div>
               <div className={styles.connectionFw}>Atlas Weigh Navigator · FW 2.14</div>
             </div>
-            <div className={styles.statusPill}>
-              <Dot color="var(--color-green)" size={8} glow pulse />
-              <span className={styles.statusText}>CONNECTED</span>
+            <div
+              className={styles.statusPill}
+              title={scaleStatus?.detail}
+            >
+              <Dot
+                color={scaleStatus ? STATUS_COLOR[scaleStatus.status] : 'var(--color-text-faint)'}
+                size={8}
+                glow={scaleStatus?.status === 'connected'}
+                pulse={scaleStatus?.status === 'connected' || scaleStatus?.status === 'connecting'}
+              />
+              <span className={styles.statusText}>{scaleStatus ? STATUS_LABEL[scaleStatus.status] : '—'}</span>
             </div>
           </div>
 
           <div className={styles.connectionGrid}>
             <div>
-              <FieldLabel>SERIAL PORT</FieldLabel>
+              <FieldLabel>DATA SOURCE</FieldLabel>
               <SelectField
                 className={styles.connectionSelect}
-                value={settings.serialPort}
-                onChange={(e) => patch({ serialPort: e.target.value })}
+                value={settings.dataSource}
+                onChange={(e) => patch({ dataSource: e.target.value as Settings['dataSource'] })}
               >
-                {SERIAL_PORTS.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
+                <option value="simulator">Simulator (demo)</option>
+                <option value="serial">Real Serial Port</option>
               </SelectField>
+            </div>
+            <div>
+              <FieldLabel>SERIAL PORT</FieldLabel>
+              {settings.dataSource === 'serial' ? (
+                <>
+                  <TextField
+                    mono
+                    className={styles.connectionSelect}
+                    value={settings.serialPort}
+                    placeholder="e.g. COM5"
+                    onChange={(e) => setSettings({ ...settings, serialPort: e.target.value })}
+                    onBlur={(e) => patch({ serialPort: e.target.value.trim() || settings.serialPort })}
+                  />
+                  {detectedPorts.length > 0 && (
+                    <div className={styles.portChips}>
+                      {detectedPorts.map((p) => (
+                        <span
+                          key={p.path}
+                          className={styles.portChip}
+                          title={p.manufacturer}
+                          onClick={() => patch({ serialPort: p.path })}
+                        >
+                          {p.path}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <SelectField
+                  className={styles.connectionSelect}
+                  value={settings.serialPort}
+                  onChange={(e) => patch({ serialPort: e.target.value })}
+                >
+                  {SERIAL_PORTS.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </SelectField>
+              )}
             </div>
             <div>
               <FieldLabel>BAUD RATE</FieldLabel>
@@ -210,21 +295,33 @@ export function SettingsScreen() {
           <div className={styles.streamPanel}>
             <div className={styles.streamHead}>
               <span className={styles.streamLabel}>LIVE STREAM TEST</span>
-              <button type="button" className={styles.streamButton} onClick={readNow}>
-                Read Now
-              </button>
+              <div className={styles.streamButtons}>
+                <button
+                  type="button"
+                  className={cx(styles.streamButton, liveStream && styles.streamButtonActive)}
+                  onClick={() => {
+                    if (!liveStream) setStreamLines([])
+                    setLiveStream((v) => !v)
+                  }}
+                >
+                  {liveStream ? '● Live' : 'Go Live'}
+                </button>
+                <button type="button" className={styles.streamButton} onClick={readNow} disabled={liveStream}>
+                  Read Now
+                </button>
+              </div>
             </div>
             {streamLines && streamLines.length > 0 ? (
               <div className={styles.streamLines}>
                 {streamLines.map((line, i) => (
-                  <div key={i} className={line.startsWith('US') ? styles.streamLineWarn : undefined}>
+                  <div key={i} className={line.toUpperCase().startsWith('US') ? styles.streamLineWarn : undefined}>
                     {line}
                   </div>
                 ))}
               </div>
             ) : (
               <div className={styles.streamEmpty}>
-                {streamLines ? 'No data on the line' : 'Press Read Now to sample the serial line'}
+                {streamLines ? 'No data on the line' : 'Press Go Live to watch the raw serial feed, or Read Now to sample it'}
               </div>
             )}
           </div>

@@ -177,6 +177,7 @@ export function buildSeed(now: Date = new Date()): SeedData {
     ntepCert: 'CC 09-068',
     operatorName: 'J. Mercer',
     scaleLabel: 'Scale 1 · Inbound',
+    dataSource: 'simulator',
     serialPort: 'COM3',
     baudRate: 9600,
     protocol: 'Cardinal SB',

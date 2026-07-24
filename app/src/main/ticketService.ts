@@ -1,4 +1,4 @@
-import { scaleSimulator } from './scaleSimulator'
+import { scaleManager } from './scale/manager'
 import { createTicket, getOpenTicket, updateTicket } from './repos/ticketRepo'
 import { getVehicle } from './repos/vehicleRepo'
 import { getProductByName } from './repos/productRepo'
@@ -47,7 +47,7 @@ export function getDraft(): Ticket {
 
 export function newDraft(): Ticket {
   const current = ensureOpenTicket()
-  scaleSimulator.settleToZero()
+  scaleManager.settleToZero()
   const draft = updateTicket(current.id, {
     vehicleId: null,
     vehicleDesc: null,
@@ -81,7 +81,7 @@ export function setDraftVehicle(vehicleId: string | null): Ticket {
     return updated
   }
   if (draft.gross == null) {
-    scaleSimulator.rampToRandomGross(vehicle.storedTare ?? 13000)
+    scaleManager.rampToRandomGross(vehicle.storedTare ?? 13000)
   }
   const updated = updateTicket(draft.id, {
     vehicleId: vehicle.id,
@@ -108,21 +108,21 @@ export function setDraftField(field: DraftField, value: string): Ticket {
 }
 
 export function pressZero(): { ok: boolean; reason?: string } {
-  return scaleSimulator.pressZero()
+  return scaleManager.pressZero()
 }
 
 export function pressTareButton(): { ok: boolean; reason?: string } {
-  const result = scaleSimulator.pressTareButton()
+  const result = scaleManager.pressTareButton()
   if (!result.ok) return result
   const draft = ensureOpenTicket()
-  const reading = scaleSimulator.getReading()
+  const reading = scaleManager.getReading()
   updateTicket(draft.id, { tareSource: reading.pushButtonTare > 0 ? 'manual' : draft.vehicleId ? 'stored' : 'none' })
   notify('draft')
   return result
 }
 
 export function captureGross(): { ok: boolean; reason?: string; ticket?: Ticket } {
-  const reading = scaleSimulator.getReading()
+  const reading = scaleManager.getReading()
   if (!reading.stable) return { ok: false, reason: 'Reading not stable' }
 
   const draft = ensureOpenTicket()
@@ -148,7 +148,7 @@ export function saveDraft(): { ok: boolean; reason?: string; saved?: Ticket; nex
   const saved = updateTicket(draft.id, { status: 'done' })
   advanceTicketCounterPast(parseInt(draft.id, 10))
   advanceInvoiceCounter()
-  scaleSimulator.settleToZero()
+  scaleManager.settleToZero()
   const nextDraft = createTicket(blankDraft(peekNextTicketNumber(), peekNextInvoiceNumber()))
   notify('tickets', 'draft')
   return { ok: true, saved, nextDraft }

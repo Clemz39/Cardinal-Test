@@ -105,6 +105,11 @@
   letter-spacing: 0.14em;
 }
 
+.streamButtons {
+  display: flex;
+  gap: 8px;
+}
+
 .streamButton {
   font: 600 11px var(--font-sans);
   color: var(--color-chrome-darker);
@@ -113,6 +118,37 @@
   border-radius: 2px;
   cursor: pointer;
   border: none;
+}
+
+.streamButton:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.streamButtonActive {
+  background: var(--color-accent);
+}
+
+.portChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.portChip {
+  font: 600 11px var(--font-mono);
+  color: var(--color-text-muted);
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  padding: 4px 9px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.portChip:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
 }
 
 .streamLines {

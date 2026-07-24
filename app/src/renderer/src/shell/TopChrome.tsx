@@ -4,9 +4,16 @@ import { Dot } from '../components/Dot'
 import { cx } from '../lib/cx'
 import { formatDateTime } from '@shared/format'
 import { useDataChanged } from '../hooks/useDataChanged'
-import type { AuthUser, Settings } from '@shared/types'
+import type { AuthUser, ScaleStatusInfo, Settings } from '@shared/types'
 import appIcon from '../assets/icon.png'
 import styles from './TopChrome.module.css'
+
+const STATUS_COLOR: Record<ScaleStatusInfo['status'], string> = {
+  connected: 'var(--color-green)',
+  connecting: 'var(--color-amber-text)',
+  disconnected: 'var(--color-text-faint)',
+  error: '#e05555'
+}
 
 export type AppScreen = 'weigh' | 'tickets' | 'vehicles' | 'products' | 'reports' | 'settings'
 
@@ -37,6 +44,7 @@ interface TopChromeProps {
 
 export function TopChrome({ screen, onNavigate, currentUser, onLogout }: TopChromeProps) {
   const [settings, setSettings] = useState<Settings | null>(null)
+  const [scaleStatus, setScaleStatus] = useState<ScaleStatusInfo | null>(null)
   const [now, setNow] = useState(() => new Date())
   const tabs = TABS.filter((tab) => ROLE_SCREENS[currentUser.role].includes(tab.key))
 
@@ -45,6 +53,11 @@ export function TopChrome({ screen, onNavigate, currentUser, onLogout }: TopChro
   }
   useEffect(loadSettings, [])
   useDataChanged(['settings'], loadSettings)
+
+  useEffect(() => {
+    window.api.scale.getStatus().then(setScaleStatus)
+    return window.api.onScaleStatus(setScaleStatus)
+  }, [])
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 15000)
@@ -74,7 +87,11 @@ export function TopChrome({ screen, onNavigate, currentUser, onLogout }: TopChro
 
       <div className={styles.right}>
         <div className={styles.connection}>
-          <Dot color="var(--color-green)" glow pulse />
+          <Dot
+            color={scaleStatus ? STATUS_COLOR[scaleStatus.status] : 'var(--color-text-faint)'}
+            glow={scaleStatus?.status === 'connected'}
+            pulse={scaleStatus?.status === 'connected' || scaleStatus?.status === 'connecting'}
+          />
           <span>{settings ? serialSummary(settings) : ''}</span>
         </div>
         <div className={styles.operator}>{currentUser.name}</div>

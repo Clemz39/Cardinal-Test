@@ -6,6 +6,8 @@ import type {
   ReportRange,
   ReportSummary,
   ScaleReading,
+  ScaleStatusInfo,
+  SerialPortInfo,
   Settings,
   Ticket,
   TicketFilter,
@@ -70,6 +72,8 @@ export interface AtlasApi {
   scale: {
     getReading(): Promise<ScaleReading>
     recentLines(limit?: number): Promise<string[]>
+    getStatus(): Promise<ScaleStatusInfo>
+    listPorts(): Promise<SerialPortInfo[]>
   }
   backup: {
     now(): Promise<{ ok: true; filePath: string } | { ok: false; error: string }>
@@ -78,5 +82,6 @@ export interface AtlasApi {
     browseRestoreFile(): Promise<string | null>
   }
   onScaleReading(callback: (reading: ScaleReading) => void): () => void
+  onScaleStatus(callback: (status: ScaleStatusInfo) => void): () => void
   onDataChanged(callback: (entities: DataEntity[]) => void): () => void
 }
