@@ -13,7 +13,7 @@
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "start": "electron-vite preview",
-    "postinstall": "electron-rebuild -f -w better-sqlite3,@serialport/bindings-cpp"
+    "postinstall": "electron-rebuild -f -o better-sqlite3"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.7",
