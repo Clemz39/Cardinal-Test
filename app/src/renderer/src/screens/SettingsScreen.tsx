@@ -5,7 +5,7 @@ import { SelectField } from '../components/SelectField'
 import { TextField } from '../components/TextField'
 import { useDataChanged } from '../hooks/useDataChanged'
 import { cx } from '../lib/cx'
-import { formatDate, formatTicketNumber } from '@shared/format'
+import { formatDate, formatDateTime, formatTicketNumber } from '@shared/format'
 import type { Settings } from '@shared/types'
 import styles from './SettingsScreen.module.css'
 
@@ -19,6 +19,8 @@ const STOP_BITS = [1, 2]
 export function SettingsScreen() {
   const [settings, setSettings] = useState<Settings | null>(null)
   const [streamLines, setStreamLines] = useState<string[] | null>(null)
+  const [backupStatus, setBackupStatus] = useState<'idle' | 'running' | 'ok' | 'error'>('idle')
+  const [backupError, setBackupError] = useState<string | null>(null)
 
   const loadSettings = (): void => {
     window.api.settings.get().then(setSettings)
@@ -30,6 +32,23 @@ export function SettingsScreen() {
   const patch = async (p: Partial<Settings>): Promise<void> => {
     const updated = await window.api.settings.update(p)
     setSettings(updated)
+  }
+
+  const handleBrowse = async (): Promise<void> => {
+    const dir = await window.api.backup.browse()
+    if (dir) patch({ backupPath: dir })
+  }
+
+  const handleBackupNow = async (): Promise<void> => {
+    setBackupStatus('running')
+    setBackupError(null)
+    const result = await window.api.backup.now()
+    if (result.ok) {
+      setBackupStatus('ok')
+    } else {
+      setBackupStatus('error')
+      setBackupError(result.error)
+    }
   }
 
   const readNow = (): void => {
@@ -198,6 +217,60 @@ export function SettingsScreen() {
                   onChange={(e) => setSettings({ ...settings, tareValidityDays: Number(e.target.value) })}
                   onBlur={(e) => patch({ tareValidityDays: Number(e.target.value) || settings.tareValidityDays })}
                 />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.sideCard}>
+            <div className={styles.sideCardTitle}>Data Backup</div>
+            <div className={styles.rowList}>
+              <div className={styles.kvRow}>
+                <span className={styles.kvLabel}>Backup folder</span>
+                <div className={styles.backupPath}>
+                  <span className={styles.backupPathText} title={settings.backupPath || undefined}>
+                    {settings.backupPath || 'Not set'}
+                  </span>
+                  <button type="button" className={styles.backupBrowse} onClick={handleBrowse}>
+                    Browse
+                  </button>
+                </div>
+              </div>
+              <div className={styles.kvRow}>
+                <span className={styles.kvLabel}>Auto-backup</span>
+                <SelectField
+                  className={styles.backupIntervalSelect}
+                  value={settings.backupIntervalHours}
+                  onChange={(e) => patch({ backupIntervalHours: Number(e.target.value) })}
+                >
+                  <option value={0}>Off</option>
+                  <option value={6}>Every 6 h</option>
+                  <option value={12}>Every 12 h</option>
+                  <option value={24}>Daily</option>
+                </SelectField>
+              </div>
+              <div className={styles.kvRow}>
+                <span className={styles.kvLabel}>Last backup</span>
+                <span className={styles.kvValue}>
+                  {settings.lastBackupAt ? formatDateTime(settings.lastBackupAt) : '—'}
+                </span>
+              </div>
+              <div className={styles.backupNowRow}>
+                <button
+                  type="button"
+                  className={styles.backupNow}
+                  disabled={!settings.backupPath || backupStatus === 'running'}
+                  onClick={handleBackupNow}
+                >
+                  {backupStatus === 'running' ? 'Backing up…' : 'Backup Now'}
+                </button>
+                {backupStatus === 'ok' && (
+                  <span className={cx(styles.backupFeedback, styles.backupFeedbackOk)}>Saved successfully</span>
+                )}
+                {backupStatus === 'error' && (
+                  <span className={cx(styles.backupFeedback, styles.backupFeedbackError)}>
+                    {backupError ?? 'Failed'}
+                  </span>
+                )}
               </div>
             </div>
           </div>

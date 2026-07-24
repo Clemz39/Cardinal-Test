@@ -207,3 +207,86 @@
   background: var(--color-panel);
   border-color: var(--color-border);
 }
+
+/* backup card */
+
+.backupPath {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.backupPathText {
+  font: 500 11px var(--font-mono);
+  color: var(--color-text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 120px;
+  direction: rtl;
+  text-align: right;
+}
+
+.backupBrowse {
+  font: 600 11px var(--font-sans);
+  color: var(--color-text-on-dark);
+  background: var(--color-chrome-dark);
+  padding: 5px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+}
+
+.backupBrowse:hover {
+  background: var(--color-chrome-darker);
+}
+
+.backupIntervalSelect {
+  font: 500 13px var(--font-mono);
+  padding: 7px 10px;
+  width: 120px;
+}
+
+.backupNowRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.backupNow {
+  font: 600 12px var(--font-sans);
+  color: var(--color-text-on-dark);
+  background: var(--color-accent);
+  padding: 8px 16px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: none;
+  flex-shrink: 0;
+}
+
+.backupNow:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.backupNow:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.backupFeedback {
+  font: 500 11px var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.backupFeedbackOk {
+  color: var(--color-green-text);
+}
+
+.backupFeedbackError {
+  color: #e05555;
+  max-width: 160px;
+}

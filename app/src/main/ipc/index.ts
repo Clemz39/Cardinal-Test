@@ -1,4 +1,4 @@
-import { ipcMain, BrowserWindow } from 'electron'
+import { ipcMain, BrowserWindow, dialog } from 'electron'
 import { scaleSimulator } from '../scaleSimulator'
 import { dataBus } from '../events'
 import { login, logout, getCurrentUser } from '../authSession'
@@ -25,6 +25,7 @@ import {
 import { startReweigh, cancelReweigh, confirmReweigh, setManualTare } from '../vehicleService'
 import { listProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../repos/productRepo'
 import { getSettings, updateSettings } from '../repos/settingsRepo'
+import { performBackup } from '../backupService'
 import { getReportSummary } from '../reportService'
 import { exportTicketsCsv, exportReportPdf, printTicket } from '../printing'
 import type { DataEntity, Product, ReportRange, ScaleReading, Settings, TicketFilter, Vehicle } from '../../shared/types'
@@ -80,6 +81,12 @@ export function registerIpcHandlers(): void {
 
   ipcMain.handle('settings:get', () => getSettings())
   ipcMain.handle('settings:update', (_e, patch: Partial<Settings>) => updateSettings(patch))
+
+  ipcMain.handle('backup:now', () => performBackup())
+  ipcMain.handle('backup:browse', async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({ properties: ['openDirectory', 'createDirectory'] })
+    return canceled ? null : filePaths[0]
+  })
 
   ipcMain.handle('reports:summary', (_e, range: ReportRange) => getReportSummary(range))
   ipcMain.handle('reports:exportPdf', (_e, range: ReportRange) => exportReportPdf(range))

@@ -71,6 +71,10 @@ export interface AtlasApi {
     getReading(): Promise<ScaleReading>
     recentLines(limit?: number): Promise<string[]>
   }
+  backup: {
+    now(): Promise<{ ok: true; filePath: string } | { ok: false; error: string }>
+    browse(): Promise<string | null>
+  }
   onScaleReading(callback: (reading: ScaleReading) => void): () => void
   onDataChanged(callback: (entities: DataEntity[]) => void): () => void
 }

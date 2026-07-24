@@ -27,7 +27,10 @@ CREATE TABLE IF NOT EXISTS settings (
   nextTicketNumber INTEGER NOT NULL,
   printerName TEXT NOT NULL,
   autoPrint INTEGER NOT NULL,
-  copies INTEGER NOT NULL
+  copies INTEGER NOT NULL,
+  backupPath TEXT NOT NULL DEFAULT '',
+  backupIntervalHours INTEGER NOT NULL DEFAULT 24,
+  lastBackupAt TEXT
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -77,6 +80,21 @@ CREATE INDEX IF NOT EXISTS idx_tickets_vehicleId ON tickets(vehicleId);
 CREATE INDEX IF NOT EXISTS idx_tickets_status ON tickets(status);
 `
 
+function runMigrations(database: Database.Database): void {
+  const migrations = [
+    `ALTER TABLE settings ADD COLUMN backupPath TEXT NOT NULL DEFAULT ''`,
+    `ALTER TABLE settings ADD COLUMN backupIntervalHours INTEGER NOT NULL DEFAULT 24`,
+    `ALTER TABLE settings ADD COLUMN lastBackupAt TEXT`
+  ]
+  for (const sql of migrations) {
+    try {
+      database.exec(sql)
+    } catch {
+      // column already exists on fresh DBs — expected
+    }
+  }
+}
+
 function seedUsersIfEmpty(database: Database.Database, users: ReturnType<typeof buildSeed>['users']): void {
   const row = database.prepare('SELECT COUNT(*) as c FROM users').get() as { c: number }
   if (row.c > 0) return
@@ -98,12 +116,14 @@ function seedIfEmpty(database: Database.Database, seed: ReturnType<typeof buildS
       id, facilityName, facilityAddress, ntepCert, operatorName, scaleLabel,
       serialPort, baudRate, protocol, dataBits, parity, stopBits,
       scaleCapacityKg, scaleDivisionKg, lastCalibration, tareValidityDays,
-      nextTicketNumber, printerName, autoPrint, copies
+      nextTicketNumber, printerName, autoPrint, copies,
+      backupPath, backupIntervalHours, lastBackupAt
     ) VALUES (
       1, @facilityName, @facilityAddress, @ntepCert, @operatorName, @scaleLabel,
       @serialPort, @baudRate, @protocol, @dataBits, @parity, @stopBits,
       @scaleCapacityKg, @scaleDivisionKg, @lastCalibration, @tareValidityDays,
-      @nextTicketNumber, @printerName, @autoPrint, @copies
+      @nextTicketNumber, @printerName, @autoPrint, @copies,
+      '', 24, NULL
     )
   `)
   insertSettings.run({ ...seed.settings, autoPrint: seed.settings.autoPrint ? 1 : 0 })
@@ -145,6 +165,7 @@ export function getDb(): Database.Database {
   db.pragma('journal_mode = WAL')
   db.pragma('foreign_keys = ON')
   db.exec(SCHEMA)
+  runMigrations(db)
   const seed = buildSeed(new Date())
   seedIfEmpty(db, seed)
   seedUsersIfEmpty(db, seed.users)

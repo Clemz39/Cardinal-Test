@@ -69,6 +69,10 @@ export interface Settings {
   printerName: string
   autoPrint: boolean
   copies: number
+  // backup
+  backupPath: string
+  backupIntervalHours: number
+  lastBackupAt: string | null
 }
 
 export interface ScaleReading {

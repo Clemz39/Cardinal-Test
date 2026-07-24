@@ -28,7 +28,9 @@ export function updateSettings(patch: Partial<Settings>): Settings {
         scaleCapacityKg=@scaleCapacityKg, scaleDivisionKg=@scaleDivisionKg,
         lastCalibration=@lastCalibration, tareValidityDays=@tareValidityDays,
         nextTicketNumber=@nextTicketNumber, printerName=@printerName,
-        autoPrint=@autoPrint, copies=@copies
+        autoPrint=@autoPrint, copies=@copies,
+        backupPath=@backupPath, backupIntervalHours=@backupIntervalHours,
+        lastBackupAt=@lastBackupAt
       WHERE id = 1`
     )
     .run({ ...next, autoPrint: next.autoPrint ? 1 : 0 })
