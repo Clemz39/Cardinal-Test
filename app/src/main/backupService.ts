@@ -1,6 +1,7 @@
-import { existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs'
+import { existsSync, mkdirSync, readdirSync, unlinkSync, copyFileSync } from 'fs'
 import { join } from 'path'
-import { getDb } from './db'
+import { app } from 'electron'
+import { getDb, getDbPath, closeDb } from './db'
 import { getSettings, updateSettings } from './repos/settingsRepo'
 
 const MAX_BACKUPS = 10
@@ -26,6 +27,30 @@ export async function performBackup(): Promise<
     updateSettings({ lastBackupAt: now.toISOString() })
 
     return { ok: true, filePath: destPath }
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : String(err) }
+  }
+}
+
+export async function restoreBackup(
+  filePath: string
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!existsSync(filePath)) return { ok: false, error: 'Backup file not found' }
+
+  try {
+    const dbPath = getDbPath()
+    closeDb()
+    copyFileSync(filePath, dbPath)
+    for (const ext of ['-wal', '-shm']) {
+      const sidecar = dbPath + ext
+      if (existsSync(sidecar)) unlinkSync(sidecar)
+    }
+    // Relaunch so every screen, the auth session, and the db handle start fresh against the restored data
+    setTimeout(() => {
+      app.relaunch()
+      app.exit(0)
+    }, 300)
+    return { ok: true }
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : String(err) }
   }

@@ -74,6 +74,8 @@ export interface AtlasApi {
   backup: {
     now(): Promise<{ ok: true; filePath: string } | { ok: false; error: string }>
     browse(): Promise<string | null>
+    restore(filePath: string): Promise<{ ok: true } | { ok: false; error: string }>
+    browseRestoreFile(): Promise<string | null>
   }
   onScaleReading(callback: (reading: ScaleReading) => void): () => void
   onDataChanged(callback: (entities: DataEntity[]) => void): () => void

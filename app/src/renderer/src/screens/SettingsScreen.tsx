@@ -21,6 +21,8 @@ export function SettingsScreen() {
   const [streamLines, setStreamLines] = useState<string[] | null>(null)
   const [backupStatus, setBackupStatus] = useState<'idle' | 'running' | 'ok' | 'error'>('idle')
   const [backupError, setBackupError] = useState<string | null>(null)
+  const [restoreStatus, setRestoreStatus] = useState<'idle' | 'running' | 'error'>('idle')
+  const [restoreError, setRestoreError] = useState<string | null>(null)
 
   const loadSettings = (): void => {
     window.api.settings.get().then(setSettings)
@@ -49,6 +51,25 @@ export function SettingsScreen() {
       setBackupStatus('error')
       setBackupError(result.error)
     }
+  }
+
+  const handleRestore = async (): Promise<void> => {
+    const filePath = await window.api.backup.browseRestoreFile()
+    if (!filePath) return
+    const fileName = filePath.split(/[/\\]/).pop()
+    const confirmed = window.confirm(
+      `Restore "${fileName}"?\n\nThis will overwrite all current data with this backup and restart the application. This cannot be undone.`
+    )
+    if (!confirmed) return
+
+    setRestoreStatus('running')
+    setRestoreError(null)
+    const result = await window.api.backup.restore(filePath)
+    if (!result.ok) {
+      setRestoreStatus('error')
+      setRestoreError(result.error)
+    }
+    // on success the app relaunches itself shortly after — stay in the running state
   }
 
   const readNow = (): void => {
@@ -269,6 +290,21 @@ export function SettingsScreen() {
                 {backupStatus === 'error' && (
                   <span className={cx(styles.backupFeedback, styles.backupFeedbackError)}>
                     {backupError ?? 'Failed'}
+                  </span>
+                )}
+              </div>
+              <div className={styles.backupNowRow}>
+                <button
+                  type="button"
+                  className={styles.backupRestore}
+                  disabled={restoreStatus === 'running'}
+                  onClick={handleRestore}
+                >
+                  {restoreStatus === 'running' ? 'Restoring…' : 'Restore from Backup'}
+                </button>
+                {restoreStatus === 'error' && (
+                  <span className={cx(styles.backupFeedback, styles.backupFeedbackError)}>
+                    {restoreError ?? 'Failed'}
                   </span>
                 )}
               </div>
