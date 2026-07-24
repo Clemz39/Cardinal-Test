@@ -85,7 +85,7 @@ export function PrintTicketLayout({ ticket, settings }: PrintTicketLayoutProps) 
         )}
       </div>
       <div className={styles.footer}>
-        {`OPERATOR ${settings.operatorName} · SCALE ${scaleNumber(settings.scaleLabel)} · NTEP ${settings.ntepCert}`.toUpperCase()}
+        {`OPERATOR ${settings.operatorName} · ${scaleNumber(settings.scaleLabel)} · NTEP ${settings.ntepCert}`.toUpperCase()}
       </div>
     </div>
   )

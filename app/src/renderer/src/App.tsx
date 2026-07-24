@@ -9,11 +9,19 @@ import { ReportsScreen } from './screens/ReportsScreen'
 import { SettingsScreen } from './screens/SettingsScreen'
 import { PrintModal } from './print/PrintModal'
 import { PrintRoute } from './print/PrintRoute'
-import type { AuthUser } from '@shared/types'
+import { ReportPrintRoute } from './print/ReportPrintRoute'
+import type { AuthUser, ReportRange } from '@shared/types'
 import styles from './App.module.css'
 
 function printIdFromLocation(): string | null {
   return new URLSearchParams(window.location.search).get('print')
+}
+
+function printReportRangeFromLocation(): ReportRange | null {
+  const params = new URLSearchParams(window.location.search)
+  const from = params.get('printReportFrom')
+  const to = params.get('printReportTo')
+  return from && to ? { from, to } : null
 }
 
 function App() {
@@ -31,6 +39,8 @@ function App() {
 
   const printRouteId = printIdFromLocation()
   if (printRouteId) return <PrintRoute ticketId={printRouteId} />
+  const printReportRange = printReportRangeFromLocation()
+  if (printReportRange) return <ReportPrintRoute range={printReportRange} />
   if (!authChecked) return null
   if (!currentUser) return <LoginScreen onLogin={setCurrentUser} />
 

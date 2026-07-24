@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PrintTicketLayout } from './PrintTicketLayout'
+import { usePrintBackground } from './usePrintBackground'
 import type { Settings, Ticket } from '@shared/types'
 
 export interface PrintRouteProps {
@@ -9,6 +10,7 @@ export interface PrintRouteProps {
 export function PrintRoute({ ticketId }: PrintRouteProps) {
   const [ticket, setTicket] = useState<Ticket | null>(null)
   const [settings, setSettings] = useState<Settings | null>(null)
+  usePrintBackground()
 
   useEffect(() => {
     window.api.tickets.get(ticketId).then(setTicket)

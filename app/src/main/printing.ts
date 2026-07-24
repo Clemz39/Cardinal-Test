@@ -70,17 +70,36 @@ export async function exportTicketsCsv(filter?: TicketFilter): Promise<OkResult 
 }
 
 export async function exportReportPdf(range: ReportRange): Promise<OkResult & { path?: string }> {
-  const win = BrowserWindow.getFocusedWindow()
-  if (!win) return { ok: false, reason: 'No window to export' }
-  const result = await dialog.showSaveDialog(win, {
+  const parent = BrowserWindow.getFocusedWindow()
+  const saveOptions = {
     title: 'Export Report',
     defaultPath: `report-${range.from.slice(0, 10)}-to-${range.to.slice(0, 10)}.pdf`,
     filters: [{ name: 'PDF', extensions: ['pdf'] }]
-  })
+  }
+  const result = parent ? await dialog.showSaveDialog(parent, saveOptions) : await dialog.showSaveDialog(saveOptions)
   if (result.canceled || !result.filePath) return { ok: false, reason: 'Export canceled' }
-  const data = await win.webContents.printToPDF({})
-  writeFileSync(result.filePath, data)
-  return { ok: true, path: result.filePath }
+
+  // Render a dedicated print layout in a hidden window rather than screenshotting
+  // whatever the dashboard happens to look like on screen — same approach as tickets.
+  const win = new BrowserWindow({
+    show: false,
+    webPreferences: { preload: PRELOAD_PATH, contextIsolation: true, sandbox: false }
+  })
+  try {
+    await loadAppRoute(win, { printReportFrom: range.from, printReportTo: range.to })
+    await win.webContents.executeJavaScript(
+      'new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))'
+    )
+    const data = await win.webContents.printToPDF({
+      printBackground: true,
+      pageSize: 'Letter',
+      margins: { top: 0.4, bottom: 0.4, left: 0.4, right: 0.4 }
+    })
+    writeFileSync(result.filePath, data)
+    return { ok: true, path: result.filePath }
+  } finally {
+    win.close()
+  }
 }
 
 export async function printTicket(id: string, copies = 1): Promise<OkResult> {
