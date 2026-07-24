@@ -58,7 +58,7 @@ export function SettingsScreen() {
     if (!filePath) return
     const fileName = filePath.split(/[/\\]/).pop()
     const confirmed = window.confirm(
-      `Restore "${fileName}"?\n\nThis will overwrite all current data with this backup and restart the application. This cannot be undone.`
+      `Restore "${fileName}"?\n\nThis will overwrite all current data with this backup and reload the app. This cannot be undone.`
     )
     if (!confirmed) return
 
@@ -69,7 +69,7 @@ export function SettingsScreen() {
       setRestoreStatus('error')
       setRestoreError(result.error)
     }
-    // on success the app relaunches itself shortly after — stay in the running state
+    // on success the window reloads itself shortly after — stay in the running state until then
   }
 
   const readNow = (): void => {
