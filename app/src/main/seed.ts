@@ -187,6 +187,7 @@ export function buildSeed(now: Date = new Date()): SeedData {
     scaleCapacityKg: 36000,
     scaleDivisionKg: 10,
     lastCalibration: isoDaysAgo(now, 164, 9, 0),
+    calibrationIntervalDays: 365,
     tareValidityDays: 90,
     nextTicketNumber: 48213,
     nextInvoiceNumber: 22841,

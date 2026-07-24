@@ -26,7 +26,7 @@ export function updateSettings(patch: Partial<Settings>): Settings {
         dataSource=@dataSource, serialPort=@serialPort, baudRate=@baudRate, protocol=@protocol, dataBits=@dataBits,
         parity=@parity, stopBits=@stopBits,
         scaleCapacityKg=@scaleCapacityKg, scaleDivisionKg=@scaleDivisionKg,
-        lastCalibration=@lastCalibration, tareValidityDays=@tareValidityDays,
+        lastCalibration=@lastCalibration, calibrationIntervalDays=@calibrationIntervalDays, tareValidityDays=@tareValidityDays,
         nextTicketNumber=@nextTicketNumber, nextInvoiceNumber=@nextInvoiceNumber, printerName=@printerName,
         autoPrint=@autoPrint, copies=@copies,
         companyDetails=@companyDetails, companyLogo=@companyLogo,

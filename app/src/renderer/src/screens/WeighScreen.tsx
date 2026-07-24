@@ -7,7 +7,16 @@ import { SelectField } from '../components/SelectField'
 import { TextField } from '../components/TextField'
 import { useDataChanged } from '../hooks/useDataChanged'
 import { cx } from '../lib/cx'
-import { formatDateLong, formatDate, formatKg, formatKgUnit, formatTime, formatTonnes, formatMoney } from '@shared/format'
+import {
+  formatDateLong,
+  formatDate,
+  formatKg,
+  formatKgUnit,
+  formatTime,
+  formatTonnes,
+  formatMoney,
+  getCalibrationStatus
+} from '@shared/format'
 import type { ProductWithStats, ScaleReading, Settings, Ticket, VehicleWithStats } from '@shared/types'
 import styles from './WeighScreen.module.css'
 
@@ -77,6 +86,7 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
   const net = gross - tare
   const stable = reading?.stable ?? false
   const mode = reading?.mode ?? 'GROSS'
+  const calibration = settings ? getCalibrationStatus(settings.lastCalibration, settings.calibrationIntervalDays) : null
 
   const runAction = async (action: () => Promise<{ ok: boolean; reason?: string }>): Promise<void> => {
     const result = await action()
@@ -104,6 +114,16 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
 
   return (
     <div className={styles.screen}>
+      {calibration && calibration.status !== 'ok' && (
+        <div className={cx(styles.calBanner, calibration.status === 'overdue' && styles.calBannerOverdue)}>
+          <span className={styles.calBannerIcon}>{calibration.status === 'overdue' ? '⚠' : '◷'}</span>
+          <span>
+            {calibration.status === 'overdue'
+              ? `Scale recalibration was due ${formatDate(calibration.dueDate)} — schedule service as soon as possible.`
+              : `Scale recalibration due ${formatDate(calibration.dueDate)} (${calibration.daysRemaining} day${calibration.daysRemaining === 1 ? '' : 's'}) — schedule service soon.`}
+          </span>
+        </div>
+      )}
       <div className={styles.banner}>
         <div className={styles.bannerLeft}>
           <div>

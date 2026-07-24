@@ -113,3 +113,9 @@
 .logout:hover {
   color: var(--color-text-on-dark);
 }
+
+.calOverdue {
+  background: #b33a3a !important;
+  border-color: #b33a3a !important;
+  color: #fff !important;
+}

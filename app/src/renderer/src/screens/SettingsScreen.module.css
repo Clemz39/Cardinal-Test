@@ -404,3 +404,43 @@
   display: flex;
   gap: 8px;
 }
+
+/* calibration */
+
+.calIntervalWrap {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.calIntervalUnit {
+  font: 500 12px var(--font-mono);
+  color: var(--color-text-faint);
+}
+
+.calRecordRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 2px;
+}
+
+.calRecordButton {
+  font: 600 12px var(--font-sans);
+  color: var(--color-text-muted);
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  padding: 8px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.calRecordButton:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+.calRecordedNote {
+  font: 600 11px var(--font-mono);
+  color: var(--color-green-text);
+}

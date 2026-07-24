@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Badge } from '../components/Badge'
 import { Dot } from '../components/Dot'
 import { cx } from '../lib/cx'
-import { formatDateTime } from '@shared/format'
+import { formatDateTime, formatDate, getCalibrationStatus } from '@shared/format'
 import { useDataChanged } from '../hooks/useDataChanged'
 import type { AuthUser, ScaleStatusInfo, Settings } from '@shared/types'
 import appIcon from '../assets/icon.png'
@@ -13,6 +13,45 @@ const STATUS_COLOR: Record<ScaleStatusInfo['status'], string> = {
   connecting: 'var(--color-amber-text)',
   disconnected: 'var(--color-text-faint)',
   error: '#e05555'
+}
+
+function CalibrationBadge({ settings }: { settings: Settings | null }) {
+  if (!settings) {
+    return (
+      <Badge tone="dark" variant="outline" pill>
+        CAL —
+      </Badge>
+    )
+  }
+  const { status, dueDate, daysRemaining } = getCalibrationStatus(
+    settings.lastCalibration,
+    settings.calibrationIntervalDays
+  )
+  if (status === 'ok') {
+    return (
+      <Badge tone="dark" variant="outline" pill title={`Next calibration due ${formatDate(dueDate)}`}>
+        CAL OK
+      </Badge>
+    )
+  }
+  if (status === 'dueSoon') {
+    return (
+      <Badge tone="amber" variant="outline" pill title={`Due ${formatDate(dueDate)}`}>
+        CAL DUE {daysRemaining}D
+      </Badge>
+    )
+  }
+  return (
+    <Badge
+      tone="amber"
+      variant="solid"
+      pill
+      className={styles.calOverdue}
+      title={`Was due ${formatDate(dueDate)}`}
+    >
+      CAL OVERDUE
+    </Badge>
+  )
 }
 
 export type AppScreen = 'weigh' | 'tickets' | 'vehicles' | 'products' | 'reports' | 'settings'
@@ -94,6 +133,7 @@ export function TopChrome({ screen, onNavigate, currentUser, onLogout }: TopChro
           />
           <span>{settings ? serialSummary(settings) : ''}</span>
         </div>
+        <CalibrationBadge settings={settings} />
         <div className={styles.operator}>{currentUser.name}</div>
         <Badge tone="dark" variant="outline" pill>
           {currentUser.role === 'technician' ? 'TECH' : 'OPERATOR'}

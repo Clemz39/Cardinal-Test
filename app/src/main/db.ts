@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS settings (
   scaleCapacityKg REAL NOT NULL,
   scaleDivisionKg REAL NOT NULL,
   lastCalibration TEXT NOT NULL,
+  calibrationIntervalDays INTEGER NOT NULL DEFAULT 365,
   tareValidityDays INTEGER NOT NULL,
   nextTicketNumber INTEGER NOT NULL,
   nextInvoiceNumber INTEGER NOT NULL DEFAULT 1000,
@@ -95,6 +96,7 @@ function runMigrations(database: Database.Database): void {
     `ALTER TABLE settings ADD COLUMN companyDetails TEXT NOT NULL DEFAULT ''`,
     `ALTER TABLE settings ADD COLUMN companyLogo TEXT`,
     `ALTER TABLE settings ADD COLUMN dataSource TEXT NOT NULL DEFAULT 'simulator'`,
+    `ALTER TABLE settings ADD COLUMN calibrationIntervalDays INTEGER NOT NULL DEFAULT 365`,
     `ALTER TABLE tickets RENAME COLUMN contractPo TO invoiceNumber`,
     `ALTER TABLE tickets ADD COLUMN unitPrice REAL`
   ]
@@ -135,14 +137,14 @@ function seedIfEmpty(database: Database.Database, seed: ReturnType<typeof buildS
     INSERT INTO settings (
       id, facilityName, facilityAddress, ntepCert, operatorName, scaleLabel,
       dataSource, serialPort, baudRate, protocol, dataBits, parity, stopBits,
-      scaleCapacityKg, scaleDivisionKg, lastCalibration, tareValidityDays,
+      scaleCapacityKg, scaleDivisionKg, lastCalibration, calibrationIntervalDays, tareValidityDays,
       nextTicketNumber, nextInvoiceNumber, printerName, autoPrint, copies,
       companyDetails, companyLogo,
       backupPath, backupIntervalHours, lastBackupAt
     ) VALUES (
       1, @facilityName, @facilityAddress, @ntepCert, @operatorName, @scaleLabel,
       @dataSource, @serialPort, @baudRate, @protocol, @dataBits, @parity, @stopBits,
-      @scaleCapacityKg, @scaleDivisionKg, @lastCalibration, @tareValidityDays,
+      @scaleCapacityKg, @scaleDivisionKg, @lastCalibration, @calibrationIntervalDays, @tareValidityDays,
       @nextTicketNumber, @nextInvoiceNumber, @printerName, @autoPrint, @copies,
       '', NULL,
       '', 24, NULL

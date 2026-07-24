@@ -65,6 +65,7 @@ export interface Settings {
   scaleCapacityKg: number
   scaleDivisionKg: number
   lastCalibration: string // ISO date
+  calibrationIntervalDays: number
   tareValidityDays: number
   // ticketing & printer
   nextTicketNumber: number

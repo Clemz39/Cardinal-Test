@@ -67,3 +67,24 @@ export function daysBetween(isoA: string, isoB: string): number {
   const b = new Date(isoB).getTime()
   return Math.abs(a - b) / (1000 * 60 * 60 * 24)
 }
+
+export type CalibrationStatus = 'ok' | 'dueSoon' | 'overdue'
+
+const CALIBRATION_DUE_SOON_DAYS = 30
+
+export function nextCalibrationDate(lastCalibration: string, intervalDays: number): string {
+  const due = new Date(lastCalibration)
+  due.setDate(due.getDate() + intervalDays)
+  return due.toISOString()
+}
+
+export function getCalibrationStatus(
+  lastCalibration: string,
+  intervalDays: number,
+  now: Date = new Date()
+): { status: CalibrationStatus; dueDate: string; daysRemaining: number } {
+  const dueDate = nextCalibrationDate(lastCalibration, intervalDays)
+  const daysRemaining = Math.ceil((new Date(dueDate).getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+  const status: CalibrationStatus = daysRemaining < 0 ? 'overdue' : daysRemaining <= CALIBRATION_DUE_SOON_DAYS ? 'dueSoon' : 'ok'
+  return { status, dueDate, daysRemaining }
+}

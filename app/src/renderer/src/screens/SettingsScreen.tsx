@@ -41,6 +41,7 @@ export function SettingsScreen() {
   const [restoreStatus, setRestoreStatus] = useState<'idle' | 'running' | 'error'>('idle')
   const [restoreError, setRestoreError] = useState<string | null>(null)
   const [logoError, setLogoError] = useState<string | null>(null)
+  const [calRecorded, setCalRecorded] = useState(false)
   const logoInputRef = useRef<HTMLInputElement>(null)
 
   const loadSettings = (): void => {
@@ -132,6 +133,12 @@ export function SettingsScreen() {
       if (typeof reader.result === 'string') patch({ companyLogo: reader.result })
     }
     reader.readAsDataURL(file)
+  }
+
+  const handleRecordCalibration = async (): Promise<void> => {
+    await patch({ lastCalibration: new Date().toISOString() })
+    setCalRecorded(true)
+    setTimeout(() => setCalRecorded(false), 3000)
   }
 
   const readNow = (): void => {
@@ -347,6 +354,28 @@ export function SettingsScreen() {
               <div className={styles.kvRow}>
                 <span className={styles.kvLabel}>Last calibration</span>
                 <span className={styles.kvValue}>{formatDate(settings.lastCalibration)}</span>
+              </div>
+              <div className={styles.kvRow}>
+                <span className={styles.kvLabel}>Recalibration interval</span>
+                <div className={styles.calIntervalWrap}>
+                  <TextField
+                    mono
+                    type="number"
+                    className={styles.kvInput}
+                    value={settings.calibrationIntervalDays}
+                    onChange={(e) => setSettings({ ...settings, calibrationIntervalDays: Number(e.target.value) })}
+                    onBlur={(e) =>
+                      patch({ calibrationIntervalDays: Number(e.target.value) || settings.calibrationIntervalDays })
+                    }
+                  />
+                  <span className={styles.calIntervalUnit}>days</span>
+                </div>
+              </div>
+              <div className={styles.calRecordRow}>
+                <button type="button" className={styles.calRecordButton} onClick={handleRecordCalibration}>
+                  Record Calibration Today
+                </button>
+                {calRecorded && <span className={styles.calRecordedNote}>Recorded</span>}
               </div>
               <div className={styles.kvRow}>
                 <span className={styles.kvLabel}>Tare validity</span>
