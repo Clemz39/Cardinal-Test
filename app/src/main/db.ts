@@ -79,7 +79,11 @@ CREATE TABLE IF NOT EXISTS tickets (
   unitPrice REAL,
   tareSource TEXT NOT NULL,
   status TEXT NOT NULL,
-  direction TEXT NOT NULL
+  direction TEXT NOT NULL,
+  printedAt TEXT,
+  voidedAt TEXT,
+  voidedBy TEXT,
+  voidReason TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_tickets_createdAt ON tickets(createdAt);
@@ -98,7 +102,11 @@ function runMigrations(database: Database.Database): void {
     `ALTER TABLE settings ADD COLUMN dataSource TEXT NOT NULL DEFAULT 'simulator'`,
     `ALTER TABLE settings ADD COLUMN calibrationIntervalDays INTEGER NOT NULL DEFAULT 365`,
     `ALTER TABLE tickets RENAME COLUMN contractPo TO invoiceNumber`,
-    `ALTER TABLE tickets ADD COLUMN unitPrice REAL`
+    `ALTER TABLE tickets ADD COLUMN unitPrice REAL`,
+    `ALTER TABLE tickets ADD COLUMN printedAt TEXT`,
+    `ALTER TABLE tickets ADD COLUMN voidedAt TEXT`,
+    `ALTER TABLE tickets ADD COLUMN voidedBy TEXT`,
+    `ALTER TABLE tickets ADD COLUMN voidReason TEXT`
   ]
   for (const sql of migrations) {
     try {
@@ -163,10 +171,12 @@ function seedIfEmpty(database: Database.Database, seed: ReturnType<typeof buildS
   const insertTicket = database.prepare(`
     INSERT INTO tickets (
       id, createdAt, capturedAt, vehicleId, vehicleDesc, hauler, commodity,
-      invoiceNumber, originBin, gross, tare, net, unitPrice, tareSource, status, direction
+      invoiceNumber, originBin, gross, tare, net, unitPrice, tareSource, status, direction,
+      printedAt, voidedAt, voidedBy, voidReason
     ) VALUES (
       @id, @createdAt, @capturedAt, @vehicleId, @vehicleDesc, @hauler, @commodity,
-      @invoiceNumber, @originBin, @gross, @tare, @net, @unitPrice, @tareSource, @status, @direction
+      @invoiceNumber, @originBin, @gross, @tare, @net, @unitPrice, @tareSource, @status, @direction,
+      @printedAt, @voidedAt, @voidedBy, @voidReason
     )
   `)
 

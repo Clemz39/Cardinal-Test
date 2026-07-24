@@ -41,6 +41,7 @@ export interface AtlasApi {
     distinctHaulers(): Promise<string[]>
     exportCsv(filter?: TicketFilter): Promise<OkResult & { path?: string }>
     print(id: string, copies?: number): Promise<OkResult>
+    void(id: string, reason: string): Promise<OkResult & { ticket?: Ticket }>
   }
   vehicles: {
     list(query?: string): Promise<VehicleWithStats[]>

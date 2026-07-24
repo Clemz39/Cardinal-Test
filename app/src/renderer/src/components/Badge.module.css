@@ -31,6 +31,10 @@
   background: var(--color-amber);
   color: var(--color-chrome-darker);
 }
+.red.solid {
+  background: var(--color-red);
+  color: var(--color-chrome-darker);
+}
 
 .green.outline {
   background: var(--color-green-bg);
@@ -41,6 +45,11 @@
   background: var(--color-amber-bg);
   border-color: var(--color-amber-border);
   color: var(--color-amber-text);
+}
+.red.outline {
+  background: var(--color-red-bg);
+  border-color: var(--color-red-border);
+  color: var(--color-red-text);
 }
 .dark.outline {
   background: transparent;
@@ -63,6 +72,9 @@
 }
 .amber.text {
   color: var(--color-amber-text);
+}
+.red.text {
+  color: var(--color-red-text);
 }
 .dark.text {
   color: var(--color-text-on-dark-dim);

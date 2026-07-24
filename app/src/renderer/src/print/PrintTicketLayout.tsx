@@ -21,6 +21,7 @@ export interface PrintTicketLayoutProps {
 export function PrintTicketLayout({ ticket, settings }: PrintTicketLayoutProps) {
   return (
     <div className={styles.layout}>
+      {ticket.status === 'void' && <div className={styles.voidStamp}>VOID</div>}
       {settings.companyLogo && <img className={styles.watermark} src={settings.companyLogo} alt="" />}
       <div className={styles.header}>
         <div className={styles.facility}>{settings.facilityName.toUpperCase()}</div>

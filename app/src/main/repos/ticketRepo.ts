@@ -52,10 +52,12 @@ export function createTicket(ticket: Ticket): Ticket {
     .prepare(
       `INSERT INTO tickets (
         id, createdAt, capturedAt, vehicleId, vehicleDesc, hauler, commodity,
-        invoiceNumber, originBin, gross, tare, net, unitPrice, tareSource, status, direction
+        invoiceNumber, originBin, gross, tare, net, unitPrice, tareSource, status, direction,
+        printedAt, voidedAt, voidedBy, voidReason
       ) VALUES (
         @id, @createdAt, @capturedAt, @vehicleId, @vehicleDesc, @hauler, @commodity,
-        @invoiceNumber, @originBin, @gross, @tare, @net, @unitPrice, @tareSource, @status, @direction
+        @invoiceNumber, @originBin, @gross, @tare, @net, @unitPrice, @tareSource, @status, @direction,
+        @printedAt, @voidedAt, @voidedBy, @voidReason
       )`
     )
     .run(ticket)
@@ -71,7 +73,8 @@ export function updateTicket(id: string, patch: Partial<Omit<Ticket, 'id'>>): Ti
       `UPDATE tickets SET
         createdAt=@createdAt, capturedAt=@capturedAt, vehicleId=@vehicleId, vehicleDesc=@vehicleDesc,
         hauler=@hauler, commodity=@commodity, invoiceNumber=@invoiceNumber, originBin=@originBin,
-        gross=@gross, tare=@tare, net=@net, unitPrice=@unitPrice, tareSource=@tareSource, status=@status, direction=@direction
+        gross=@gross, tare=@tare, net=@net, unitPrice=@unitPrice, tareSource=@tareSource, status=@status, direction=@direction,
+        printedAt=@printedAt, voidedAt=@voidedAt, voidedBy=@voidedBy, voidReason=@voidReason
       WHERE id=@id`
     )
     .run(next)
@@ -80,6 +83,15 @@ export function updateTicket(id: string, patch: Partial<Omit<Ticket, 'id'>>): Ti
 
 export function deleteTicket(id: string): void {
   getDb().prepare('DELETE FROM tickets WHERE id = ?').run(id)
+}
+
+// Direct column write (not routed through updateTicket) so a print can never
+// touch any of the ticket's captured weighing data.
+export function markPrinted(id: string): Ticket | null {
+  const current = getTicket(id)
+  if (!current || current.printedAt) return current
+  getDb().prepare('UPDATE tickets SET printedAt = ? WHERE id = ?').run(new Date().toISOString(), id)
+  return getTicket(id)
 }
 
 export function distinctCommodities(): string[] {

@@ -88,7 +88,7 @@
 
 .tableHead {
   display: grid;
-  grid-template-columns: 90px 120px 90px 1fr 140px 100px 100px 100px 90px 110px;
+  grid-template-columns: 90px 120px 90px 1fr 140px 100px 100px 100px 90px 150px;
   background: var(--color-table-head);
   padding: 11px 16px;
   font: 600 10px var(--font-mono);
@@ -99,7 +99,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 90px 120px 90px 1fr 140px 100px 100px 100px 90px 110px;
+  grid-template-columns: 90px 120px 90px 1fr 140px 100px 100px 100px 90px 150px;
   padding: 13px 16px;
   font: 500 12px var(--font-mono);
   color: var(--color-text-soft);
@@ -138,10 +138,98 @@
   color: var(--color-text);
 }
 
+.actionCell {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
 .reprintLink {
   font: 600 11px var(--font-sans);
   color: var(--color-amber-text);
   cursor: pointer;
+}
+
+.voidLink {
+  font: 600 11px var(--font-sans);
+  color: var(--color-red-text);
+  cursor: pointer;
+}
+
+.rowVoid {
+  opacity: 0.55;
+}
+
+.rowVoid .netCell {
+  text-decoration: line-through;
+}
+
+/* void dialog */
+
+.voidOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 15, 12, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.voidPanel {
+  background: var(--color-card-white);
+  width: 420px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.voidTitleBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-chrome-dark);
+  padding: 13px 18px;
+}
+
+.voidTitle {
+  font: 600 12px var(--font-mono);
+  color: var(--color-text-on-dark);
+  letter-spacing: 0.08em;
+}
+
+.voidClose {
+  font: 600 16px var(--font-sans);
+  color: var(--color-text-on-dark-muted);
+  cursor: pointer;
+}
+
+.voidBody {
+  padding: 18px;
+}
+
+.voidWarning {
+  font: 500 12.5px var(--font-sans);
+  color: var(--color-text-muted);
+  margin: 0 0 14px;
+  line-height: 1.5;
+}
+
+.voidError {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: var(--color-red-bg);
+  border: 1px solid var(--color-red-border);
+  border-radius: var(--radius);
+  color: var(--color-red-text);
+  font: 600 12px var(--font-sans);
+}
+
+.voidFooter {
+  display: flex;
+  gap: 10px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--color-border-soft);
 }
 
 .empty {

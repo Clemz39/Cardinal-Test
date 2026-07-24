@@ -1,4 +1,4 @@
-export type TicketStatus = 'live' | 'done'
+export type TicketStatus = 'live' | 'done' | 'void'
 export type TareSource = 'stored' | 'manual' | 'none'
 export type TareValidity = 'valid' | 'stale' | 'none'
 
@@ -19,6 +19,10 @@ export interface Ticket {
   tareSource: TareSource
   status: TicketStatus
   direction: 'inbound' | 'outbound'
+  printedAt: string | null // ISO timestamp of first successful print; ticket is locked once set
+  voidedAt: string | null
+  voidedBy: string | null // name of the user who voided it
+  voidReason: string | null
 }
 
 export interface Vehicle {

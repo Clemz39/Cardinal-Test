@@ -12,6 +12,7 @@ import {
   pressTareButton,
   captureGross,
   saveDraft,
+  voidTicket,
   type DraftField
 } from '../ticketService'
 import { listTickets, getTicket, getRecentDoneTickets, distinctCommodities, distinctHaulers } from '../repos/ticketRepo'
@@ -67,6 +68,7 @@ export function registerIpcHandlers(): void {
   ipcMain.handle('tickets:distinctHaulers', () => distinctHaulers())
   ipcMain.handle('tickets:exportCsv', (_e, filter?: TicketFilter) => exportTicketsCsv(filter))
   ipcMain.handle('tickets:print', (_e, id: string, copies?: number) => printTicket(id, copies))
+  ipcMain.handle('tickets:void', (_e, id: string, reason: string) => voidTicket(id, reason))
 
   ipcMain.handle('vehicles:list', (_e, query?: string) => listVehicles(query))
   ipcMain.handle('vehicles:get', (_e, id: string) => getVehicle(id))

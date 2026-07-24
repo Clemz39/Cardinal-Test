@@ -5,6 +5,22 @@
   background: var(--color-card-white);
 }
 
+.voidStamp {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-18deg);
+  font: 700 64px var(--font-sans);
+  letter-spacing: 0.12em;
+  color: var(--color-red-text);
+  opacity: 0.35;
+  border: 6px solid var(--color-red-text);
+  border-radius: var(--radius-md);
+  padding: 4px 24px;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .watermark {
   position: absolute;
   top: 50%;

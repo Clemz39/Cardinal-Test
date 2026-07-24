@@ -1,7 +1,8 @@
 import { BrowserWindow, dialog } from 'electron'
 import { writeFileSync } from 'fs'
-import { getTicket, listTickets } from './repos/ticketRepo'
+import { getTicket, listTickets, markPrinted } from './repos/ticketRepo'
 import { loadAppRoute, PRELOAD_PATH } from './windowUrl'
+import { notify } from './events'
 import type { ReportRange, Ticket, TicketFilter } from '../shared/types'
 
 type OkResult = { ok: boolean; reason?: string }
@@ -25,7 +26,11 @@ function ticketsToCsv(tickets: Ticket[]): string {
     'Unit Price ($/kg)',
     'Value ($)',
     'Status',
-    'Direction'
+    'Direction',
+    'Printed At',
+    'Voided At',
+    'Voided By',
+    'Void Reason'
   ]
   const rows = tickets.map((t) => [
     t.id,
@@ -41,7 +46,11 @@ function ticketsToCsv(tickets: Ticket[]): string {
     t.unitPrice?.toString() ?? '',
     t.net != null && t.unitPrice != null ? (t.net * t.unitPrice).toFixed(2) : '',
     t.status,
-    t.direction
+    t.direction,
+    t.printedAt ?? '',
+    t.voidedAt ?? '',
+    t.voidedBy ?? '',
+    t.voidReason ?? ''
   ])
   return [headers, ...rows].map((row) => row.map(csvEscape).join(',')).join('\n')
 }
@@ -92,6 +101,10 @@ export async function printTicket(id: string, copies = 1): Promise<OkResult> {
         resolve(success ? { ok: true } : { ok: false, reason })
       })
     })
+    if (printed.ok) {
+      markPrinted(id)
+      notify('tickets', 'draft')
+    }
     return printed
   } finally {
     win.close()

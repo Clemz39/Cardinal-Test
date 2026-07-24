@@ -2,7 +2,7 @@ import type { HTMLAttributes } from 'react'
 import { cx } from '../lib/cx'
 import styles from './Badge.module.css'
 
-export type BadgeTone = 'green' | 'amber' | 'dark' | 'chrome' | 'greenDim'
+export type BadgeTone = 'green' | 'amber' | 'dark' | 'chrome' | 'greenDim' | 'red'
 export type BadgeVariant = 'solid' | 'outline' | 'text'
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {

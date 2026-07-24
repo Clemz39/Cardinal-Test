@@ -13,7 +13,7 @@ export function getReportSummary(range: ReportRange): ReportSummary {
         SUM(CASE WHEN direction = 'outbound' THEN 1 ELSE 0 END) as outboundCount,
         COALESCE(SUM(CASE WHEN net IS NOT NULL THEN net ELSE 0 END), 0) as netReceivedKg,
         SUM(CASE WHEN net IS NOT NULL THEN 1 ELSE 0 END) as weighedCount
-      FROM tickets WHERE createdAt BETWEEN @from AND @to`
+      FROM tickets WHERE createdAt BETWEEN @from AND @to AND status != 'void'`
     )
     .get(range) as {
     ticketCount: number
@@ -27,7 +27,7 @@ export function getReportSummary(range: ReportRange): ReportSummary {
     .prepare(
       `SELECT commodity as name, SUM(net) as valueKg
        FROM tickets
-       WHERE createdAt BETWEEN @from AND @to AND net IS NOT NULL AND commodity IS NOT NULL
+       WHERE createdAt BETWEEN @from AND @to AND net IS NOT NULL AND commodity IS NOT NULL AND status != 'void'
        GROUP BY commodity
        ORDER BY valueKg DESC`
     )
@@ -46,7 +46,7 @@ export function getReportSummary(range: ReportRange): ReportSummary {
     .prepare(
       `SELECT hauler as name, COUNT(*) as loads, SUM(net) as netKg
        FROM tickets
-       WHERE createdAt BETWEEN @from AND @to AND net IS NOT NULL AND hauler IS NOT NULL
+       WHERE createdAt BETWEEN @from AND @to AND net IS NOT NULL AND hauler IS NOT NULL AND status != 'void'
        GROUP BY hauler
        ORDER BY netKg DESC
        LIMIT 5`

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Badge } from '../components/Badge'
 import { Button } from '../components/Button'
+import { FieldLabel } from '../components/FieldLabel'
 import { SelectField } from '../components/SelectField'
 import { TextField } from '../components/TextField'
 import { useDataChanged } from '../hooks/useDataChanged'
@@ -64,7 +65,7 @@ export function TicketsScreen({ onPrint }: TicketsScreenProps) {
     loadFilters()
   })
 
-  const netTotal = tickets.reduce((sum, t) => sum + (t.net ?? 0), 0)
+  const netTotal = tickets.filter((t) => t.status !== 'void').reduce((sum, t) => sum + (t.net ?? 0), 0)
 
   const handleExportCsv = (): void => {
     void window.api.tickets.exportCsv(filter)
@@ -72,6 +73,10 @@ export function TicketsScreen({ onPrint }: TicketsScreenProps) {
   const handleExportPdf = (): void => {
     void window.api.reports.exportPdf(rangeFor(rangeKey))
   }
+
+  const canVoid = (t: Ticket): boolean => t.status === 'done' || (t.status === 'live' && t.printedAt != null)
+
+  const [voidTarget, setVoidTarget] = useState<Ticket | null>(null)
 
   return (
     <div className={styles.screen}>
@@ -149,7 +154,7 @@ export function TicketsScreen({ onPrint }: TicketsScreenProps) {
         {tickets.length === 0 && <div className={styles.empty}>No tickets match these filters</div>}
 
         {tickets.map((t) => (
-          <div key={t.id} className={styles.row}>
+          <div key={t.id} className={cx(styles.row, t.status === 'void' && styles.rowVoid)}>
             <span className={styles.ticketCell}>{t.id}</span>
             <span className={styles.timeCell}>{formatDateTime(t.createdAt)}</span>
             <span>{t.vehicleId ?? '—'}</span>
@@ -159,20 +164,31 @@ export function TicketsScreen({ onPrint }: TicketsScreenProps) {
             <span className={styles.right}>{formatKg(t.tare)}</span>
             <span className={cx(styles.right, styles.netCell)}>{formatKg(t.net)}</span>
             <span className={styles.right}>
-              {t.status === 'live' ? (
+              {t.status === 'live' && (
                 <Badge tone="amber" variant="text" style={{ fontSize: 10 }}>
                   ◷ live
                 </Badge>
-              ) : (
+              )}
+              {t.status === 'done' && (
                 <Badge tone="green" variant="text" style={{ fontSize: 10, color: 'var(--color-green-text)' }}>
                   ✓ done
                 </Badge>
               )}
+              {t.status === 'void' && (
+                <Badge tone="red" variant="text" style={{ fontSize: 10 }} title={t.voidReason ?? undefined}>
+                  ✕ void
+                </Badge>
+              )}
             </span>
-            <span className={styles.right}>
+            <span className={cx(styles.right, styles.actionCell)}>
               <span className={styles.reprintLink} onClick={() => onPrint(t.id)}>
                 Reprint
               </span>
+              {canVoid(t) && (
+                <span className={styles.voidLink} onClick={() => setVoidTarget(t)}>
+                  Void
+                </span>
+              )}
             </span>
           </div>
         ))}
@@ -184,6 +200,78 @@ export function TicketsScreen({ onPrint }: TicketsScreenProps) {
           <span>
             {formatKgUnit(netTotal)} &nbsp;·&nbsp; {formatTonnes(netTotal)}
           </span>
+        </div>
+      </div>
+
+      {voidTarget && <VoidDialog ticket={voidTarget} onClose={() => setVoidTarget(null)} />}
+    </div>
+  )
+}
+
+interface VoidDialogProps {
+  ticket: Ticket
+  onClose: () => void
+}
+
+function VoidDialog({ ticket, onClose }: VoidDialogProps) {
+  const [reason, setReason] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+
+  const handleVoid = async (): Promise<void> => {
+    if (!reason.trim()) {
+      setError('A reason is required to void a ticket.')
+      return
+    }
+    setSubmitting(true)
+    const result = await window.api.tickets.void(ticket.id, reason)
+    setSubmitting(false)
+    if (!result.ok) {
+      setError(result.reason ?? 'Void failed')
+      return
+    }
+    onClose()
+  }
+
+  return (
+    <div className={styles.voidOverlay} onClick={onClose}>
+      <div className={styles.voidPanel} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.voidTitleBar}>
+          <span className={styles.voidTitle}>VOID TICKET {ticket.id}</span>
+          <span className={styles.voidClose} onClick={onClose}>
+            ✕
+          </span>
+        </div>
+        <div className={styles.voidBody}>
+          <p className={styles.voidWarning}>
+            This permanently marks ticket {ticket.id} as void and excludes it from report totals. This cannot be
+            undone.
+          </p>
+          <FieldLabel>REASON</FieldLabel>
+          <TextField
+            autoFocus
+            value={reason}
+            placeholder="e.g. Data entry error, duplicate weigh…"
+            onChange={(e) => {
+              setReason(e.target.value)
+              setError(null)
+            }}
+            onKeyDown={(e) => e.key === 'Enter' && handleVoid()}
+          />
+          {error && <div className={styles.voidError}>{error}</div>}
+        </div>
+        <div className={styles.voidFooter}>
+          <Button variant="secondary" muted style={{ flex: 1, padding: 12, fontSize: 13 }} onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            style={{ flex: 1, padding: 12, fontSize: 13, background: 'var(--color-red)' }}
+            onClick={handleVoid}
+            disabled={submitting}
+          >
+            {submitting ? 'Voiding…' : 'Void Ticket'}
+          </Button>
         </div>
       </div>
     </div>

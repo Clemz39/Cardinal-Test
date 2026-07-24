@@ -25,7 +25,8 @@ const api: AtlasApi = {
     distinctCommodities: () => ipcRenderer.invoke('tickets:distinctCommodities'),
     distinctHaulers: () => ipcRenderer.invoke('tickets:distinctHaulers'),
     exportCsv: (filter) => ipcRenderer.invoke('tickets:exportCsv', filter),
-    print: (id, copies) => ipcRenderer.invoke('tickets:print', id, copies)
+    print: (id, copies) => ipcRenderer.invoke('tickets:print', id, copies),
+    void: (id, reason) => ipcRenderer.invoke('tickets:void', id, reason)
   },
   vehicles: {
     list: (query) => ipcRenderer.invoke('vehicles:list', query),

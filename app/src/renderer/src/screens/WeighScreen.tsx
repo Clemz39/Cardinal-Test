@@ -87,6 +87,7 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
   const stable = reading?.stable ?? false
   const mode = reading?.mode ?? 'GROSS'
   const calibration = settings ? getCalibrationStatus(settings.lastCalibration, settings.calibrationIntervalDays) : null
+  const locked = draft.printedAt != null
 
   const runAction = async (action: () => Promise<{ ok: boolean; reason?: string }>): Promise<void> => {
     const result = await action()
@@ -110,6 +111,17 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
     if (settings?.autoPrint && result.saved) {
       void window.api.tickets.print(result.saved.id, settings.copies)
     }
+  }
+
+  const handleNew = async (): Promise<void> => {
+    if (draft.printedAt && draft.status === 'live') {
+      const confirmed = window.confirm(
+        `Ticket ${draft.id} has already been printed. Starting a new ticket will void it. Continue?`
+      )
+      if (!confirmed) return
+    }
+    const next = await window.api.draft.reset()
+    setDraft(next)
   }
 
   return (
@@ -158,20 +170,30 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
           </div>
           <div className={styles.buttonCol}>
             <div className={styles.buttonRow}>
-              <Button variant="dark" style={{ padding: '10px 18px', fontSize: 12 }} onClick={() => runAction(() => window.api.draft.pressZero())}>
+              <Button
+                variant="dark"
+                disabled={locked}
+                style={{ padding: '10px 18px', fontSize: 12 }}
+                onClick={() => runAction(() => window.api.draft.pressZero())}
+              >
                 ZERO
               </Button>
-              <Button variant="dark" style={{ padding: '10px 18px', fontSize: 12 }} onClick={() => runAction(() => window.api.draft.pressTare())}>
+              <Button
+                variant="dark"
+                disabled={locked}
+                style={{ padding: '10px 18px', fontSize: 12 }}
+                onClick={() => runAction(() => window.api.draft.pressTare())}
+              >
                 TARE
               </Button>
             </div>
             <Button
               variant="primary"
               glow
-              disabled={!stable}
+              disabled={!stable || locked}
               style={{ padding: '11px 18px', fontSize: 13, letterSpacing: '.03em', width: '100%' }}
               onClick={handleCaptureGross}
-              title={stable ? undefined : 'Reading not stable'}
+              title={locked ? 'Ticket already printed' : stable ? undefined : 'Reading not stable'}
             >
               ⚖  CAPTURE GROSS
             </Button>
@@ -180,6 +202,11 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
       </div>
 
       {actionError && <div className={styles.actionError}>{actionError}</div>}
+      {locked && draft.status === 'live' && (
+        <div className={styles.lockNotice}>
+          🔒 Ticket {draft.id} has been printed and is locked. Save it or start a New ticket to make changes.
+        </div>
+      )}
 
       <div className={styles.body}>
         <div className={styles.formCol}>
@@ -196,13 +223,14 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
             </Badge>
           </div>
 
-          <VehiclePicker draft={draft} vehicle={vehicle} />
+          <VehiclePicker draft={draft} vehicle={vehicle} locked={locked} />
 
           <div className={styles.fieldGrid}>
             <div>
               <FieldLabel>HAULER / CUSTOMER</FieldLabel>
               <SelectField
                 value={draft.hauler ?? ''}
+                disabled={locked}
                 onChange={(e) => window.api.draft.setField('hauler', e.target.value).then(setDraft)}
               >
                 <option value="">—</option>
@@ -219,6 +247,7 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
               <FieldLabel>COMMODITY</FieldLabel>
               <SelectField
                 value={draft.commodity ?? ''}
+                disabled={locked}
                 onChange={(e) => window.api.draft.setField('commodity', e.target.value).then(setDraft)}
               >
                 <option value="">—</option>
@@ -235,6 +264,7 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
                 mono
                 value={draft.invoiceNumber ?? ''}
                 placeholder="INV-000000"
+                disabled={locked}
                 onChange={(e) => window.api.draft.setField('invoiceNumber', e.target.value).then(setDraft)}
               />
             </div>
@@ -243,13 +273,14 @@ export function WeighScreen({ onPrint }: WeighScreenProps) {
               <TextField
                 value={draft.originBin ?? ''}
                 placeholder="Field · Bin"
+                disabled={locked}
                 onChange={(e) => window.api.draft.setField('originBin', e.target.value).then(setDraft)}
               />
             </div>
           </div>
 
           <div className={styles.actionRow}>
-            <Button variant="secondary" muted style={{ padding: '14px 22px', fontSize: 13 }} onClick={() => window.api.draft.reset().then(setDraft)}>
+            <Button variant="secondary" muted style={{ padding: '14px 22px', fontSize: 13 }} onClick={handleNew}>
               New
             </Button>
             <Button variant="secondary" style={{ padding: '14px 22px', fontSize: 13 }} onClick={handleSave}>
@@ -354,9 +385,10 @@ function tareValidityLine(vehicle: VehicleWithStats): { dotColor: string; textCo
 interface VehiclePickerProps {
   draft: Ticket
   vehicle: VehicleWithStats | null
+  locked: boolean
 }
 
-function VehiclePicker({ draft, vehicle }: VehiclePickerProps) {
+function VehiclePicker({ draft, vehicle, locked }: VehiclePickerProps) {
   const [editing, setEditing] = useState(!draft.vehicleId)
   const [query, setQuery] = useState('')
   const [matches, setMatches] = useState<VehicleWithStats[]>([])
@@ -377,7 +409,7 @@ function VehiclePicker({ draft, vehicle }: VehiclePickerProps) {
     setQuery('')
   }
 
-  if (editing) {
+  if (editing && !locked) {
     return (
       <div>
         <FieldLabel>VEHICLE — TYPE OR SCAN ID</FieldLabel>
@@ -417,12 +449,14 @@ function VehiclePicker({ draft, vehicle }: VehiclePickerProps) {
       <div
         className={styles.vehicleBox}
         onClick={() => {
+          if (locked) return
           setQuery(draft.vehicleId ?? '')
           setEditing(true)
         }}
+        style={locked ? { cursor: 'default' } : undefined}
       >
         <span className={styles.vehicleSelected}>
-          {draft.vehicleId}
+          {draft.vehicleId ?? '—'}
           {draft.vehicleDesc ? <>&nbsp;·&nbsp;{draft.vehicleDesc}</> : null}
         </span>
         {line && (

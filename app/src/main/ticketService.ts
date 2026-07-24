@@ -1,7 +1,8 @@
 import { scaleManager } from './scale/manager'
-import { createTicket, getOpenTicket, updateTicket } from './repos/ticketRepo'
+import { createTicket, getOpenTicket, getTicket, updateTicket } from './repos/ticketRepo'
 import { getVehicle } from './repos/vehicleRepo'
 import { getProductByName } from './repos/productRepo'
+import { getCurrentUser } from './authSession'
 import {
   advanceTicketCounterPast,
   peekNextTicketNumber,
@@ -30,8 +31,27 @@ function blankDraft(ticketNumber: number, invoiceNumber: number): Ticket {
     unitPrice: null,
     tareSource: 'none',
     status: 'live',
-    direction: 'inbound'
+    direction: 'inbound',
+    printedAt: null,
+    voidedAt: null,
+    voidedBy: null,
+    voidReason: null
   }
+}
+
+// Once a ticket has been handed over as a printout, its captured data must stop
+// changing silently — any further edit has to go through the void workflow instead.
+function isLocked(ticket: Ticket): boolean {
+  return ticket.printedAt != null
+}
+
+function voidTicketRecord(id: string, reason: string): Ticket {
+  return updateTicket(id, {
+    status: 'void',
+    voidedAt: new Date().toISOString(),
+    voidedBy: getCurrentUser()?.name ?? null,
+    voidReason: reason
+  })
 }
 
 export function ensureOpenTicket(): Ticket {
@@ -47,6 +67,19 @@ export function getDraft(): Ticket {
 
 export function newDraft(): Ticket {
   const current = ensureOpenTicket()
+
+  // A printed draft already exists as a physical copy — repurposing its row for a
+  // different vehicle/weight would leave that printout pointing at data that no
+  // longer matches it. Void it (auditable, attributed) and start on a fresh number.
+  if (isLocked(current)) {
+    voidTicketRecord(current.id, 'Replaced by a new ticket before saving')
+    advanceTicketCounterPast(parseInt(current.id, 10))
+    scaleManager.settleToZero()
+    const draft = createTicket(blankDraft(peekNextTicketNumber(), peekNextInvoiceNumber()))
+    notify('draft', 'tickets')
+    return draft
+  }
+
   scaleManager.settleToZero()
   const draft = updateTicket(current.id, {
     vehicleId: null,
@@ -69,6 +102,7 @@ export function newDraft(): Ticket {
 
 export function setDraftVehicle(vehicleId: string | null): Ticket {
   const draft = ensureOpenTicket()
+  if (isLocked(draft)) return draft
   if (!vehicleId) {
     const updated = updateTicket(draft.id, { vehicleId: null, vehicleDesc: null, tareSource: 'none' })
     notify('draft')
@@ -97,6 +131,7 @@ export type DraftField = 'hauler' | 'commodity' | 'invoiceNumber' | 'originBin'
 
 export function setDraftField(field: DraftField, value: string): Ticket {
   const draft = ensureOpenTicket()
+  if (isLocked(draft)) return draft
   const patch: Partial<Ticket> = { [field]: value }
   if (field === 'commodity') {
     const product = value ? getProductByName(value) : null
@@ -115,6 +150,7 @@ export function pressTareButton(): { ok: boolean; reason?: string } {
   const result = scaleManager.pressTareButton()
   if (!result.ok) return result
   const draft = ensureOpenTicket()
+  if (isLocked(draft)) return result
   const reading = scaleManager.getReading()
   updateTicket(draft.id, { tareSource: reading.pushButtonTare > 0 ? 'manual' : draft.vehicleId ? 'stored' : 'none' })
   notify('draft')
@@ -122,10 +158,12 @@ export function pressTareButton(): { ok: boolean; reason?: string } {
 }
 
 export function captureGross(): { ok: boolean; reason?: string; ticket?: Ticket } {
+  const draft = ensureOpenTicket()
+  if (isLocked(draft)) return { ok: false, reason: 'Ticket already printed — start a new ticket to make changes' }
+
   const reading = scaleManager.getReading()
   if (!reading.stable) return { ok: false, reason: 'Reading not stable' }
 
-  const draft = ensureOpenTicket()
   const vehicle = draft.vehicleId ? getVehicle(draft.vehicleId) : null
   const tare = reading.pushButtonTare > 0 ? reading.pushButtonTare : vehicle?.storedTare ?? 0
   const tareSource = reading.pushButtonTare > 0 ? 'manual' : vehicle?.storedTare != null ? 'stored' : 'none'
@@ -152,4 +190,15 @@ export function saveDraft(): { ok: boolean; reason?: string; saved?: Ticket; nex
   const nextDraft = createTicket(blankDraft(peekNextTicketNumber(), peekNextInvoiceNumber()))
   notify('tickets', 'draft')
   return { ok: true, saved, nextDraft }
+}
+
+export function voidTicket(id: string, reason: string): { ok: boolean; reason?: string; ticket?: Ticket } {
+  const ticket = getTicket(id)
+  if (!ticket) return { ok: false, reason: 'Ticket not found' }
+  if (ticket.status === 'void') return { ok: false, reason: 'Ticket is already void' }
+  if (!reason.trim()) return { ok: false, reason: 'A reason is required to void a ticket' }
+
+  const voided = voidTicketRecord(id, reason.trim())
+  notify('tickets', 'draft')
+  return { ok: true, ticket: voided }
 }

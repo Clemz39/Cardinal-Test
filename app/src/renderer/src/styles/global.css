@@ -62,6 +62,12 @@
   --color-green-dim-border: #1f4a30;
   --color-green-dim-text: #6fc792;
 
+  /* status red */
+  --color-red: #c74b4b;
+  --color-red-text: #a13a3a;
+  --color-red-bg: #f7e7e7;
+  --color-red-border: #e0b8b8;
+
   /* misc */
   --color-tare-green: #7da98f;
   --color-stream-text: #6f8a78;
