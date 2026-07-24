@@ -54,16 +54,11 @@
       "**/*.node"
     ],
     "win": {
-      "target": "nsis",
+      "target": "portable",
       "icon": "build/icon.ico"
     },
-    "nsis": {
-      "oneClick": false,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "Atlas Weigh Navigator"
+    "portable": {
+      "artifactName": "Atlas Weigh Navigator.exe"
     }
   }
 }
